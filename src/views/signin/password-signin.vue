@@ -32,7 +32,6 @@ const handleSubmit = async () => {
 };
 const toSignup = () => {
   // 跳转至注册页
-  console.log("跳转至注册页面");
   router.push("/signup");
 };
 // 记住密码处理
@@ -78,7 +77,7 @@ const toSignup = () => {
   </div>
 </template>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 :deep(.arco-form-item-content.arco-form-item-content-flex) {
   justify-content: space-between;
   .forgetPassword {
