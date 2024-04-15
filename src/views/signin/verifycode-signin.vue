@@ -48,7 +48,6 @@ const handleGetCode = async () => {
     // 获取验证码
     const { data } = await fetchGetCode(loginForm.email);
     loginForm.uuid = data.uuid;
-    console.log(loginForm.uuid);
     Message.success("验证码已发送，请注意查收");
     startCountdown();
   } catch (error) {
@@ -66,6 +65,10 @@ const startCountdown = () => {
       clearInterval(countdownTimer.value);
     }
   }, 1000);
+};
+
+const toSignup = () => {
+  router.push("/signup");
 };
 </script>
 
@@ -95,7 +98,22 @@ const startCountdown = () => {
         <a-button type="primary" long html-type="submit" :loading="signinLoading">登录</a-button>
       </a-form-item>
     </a-form>
+    <div class="to-signup">
+      没有账号？
+      <span @click="toSignup">立即注册</span>
+    </div>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.form-container {
+  flex: 1;
+  .to-signup {
+    text-align: center;
+    span {
+      cursor: pointer;
+      color: rgb(var(--primary-6));
+    }
+  }
+}
+</style>
