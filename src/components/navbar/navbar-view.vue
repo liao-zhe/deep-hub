@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-// hooks
-// import { authInfoClear } from "@/hooks/authInfo";
 import { useUserStore } from "@/stores";
 import { storeToRefs } from "pinia";
 const userStore = useUserStore();
@@ -41,8 +39,9 @@ const toHome = () => {
   router.push("/home");
 };
 
-const getAvatar = () => {
-  return userStore.userInfo.avatar;
+// 进入动态界面
+const toMoment = () => {
+  router.push("/moment");
 };
 </script>
 
@@ -66,7 +65,7 @@ const getAvatar = () => {
       <a-col :flex="8" class="center">
         <a-menu mode="horizontal" :default-selected-keys="['1']">
           <a-menu-item key="1" @click="toHome">首页</a-menu-item>
-          <a-menu-item key="2">动态</a-menu-item>
+          <a-menu-item key="2" @click="toMoment">动态</a-menu-item>
           <a-menu-item key="3">资源</a-menu-item>
           <a-menu-item key="4">问答</a-menu-item>
         </a-menu>
@@ -80,7 +79,7 @@ const getAvatar = () => {
         <icon-notification class="notify" />
         <a-popover v-if="verifyLogin">
           <a-avatar :size="36" class="avatar">
-            <img :src="getAvatar()" alt="" />
+            <img :src="userStore.userInfo.avatar" alt="" />
           </a-avatar>
           <template #content>
             <router-link :to="`/user/${username()}`" target="_blank">
@@ -101,7 +100,7 @@ const getAvatar = () => {
   </div>
 </template>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .central,
 .signout,
 .signin,
