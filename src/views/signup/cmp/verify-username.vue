@@ -7,8 +7,8 @@ const isVerify = ref(false);
 const tipRef = ref("");
 
 async function verifyUsernameInput() {
-  if (!/^[a-zA-Z0-9\u0391-\uFFE5]{4,8}$/.test(usernameVal.value)) {
-    tipRef.value.textContent = "任意字母（大小写）、数字以及汉字（包括全角字符）的字符串，4-8位";
+  if (!/^[a-zA-Z0-9_]{3,12}$/.test(usernameVal.value)) {
+    tipRef.value.textContent = "任意字母（大小写）、数字，3-12位";
     tipRef.value.style.color = " rgb(var(--danger-6))";
     isVerify.value = false;
     return;
@@ -47,7 +47,7 @@ defineExpose({
         <icon-user />
       </template>
     </a-input>
-    <div class="tip" ref="tipRef">任意字母（大小写）、数字以及汉字（包括全角字符）的字符串，4-8位</div>
+    <div class="tip" ref="tipRef">任意字母（大小写）、数字，3-12位</div>
   </div>
 </template>
 
