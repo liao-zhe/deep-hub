@@ -6,7 +6,7 @@ const tipRef = ref("");
 import { debounce } from "lodash";
 
 function verfiyNicknameInput() {
-  if (!/^[^\s]{1,10}$/.test(nicknameVal.value)) {
+  if (!/^[a-zA-Z0-9\u0391-\uFFE5]{1,10}$/.test(nicknameVal.value)) {
     tipRef.value.textContent = "昵称长度1~10，不能包含空格";
     tipRef.value.style.color = " rgb(var(--danger-6))";
     return (isVerify.value = false);
