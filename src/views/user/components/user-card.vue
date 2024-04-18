@@ -39,7 +39,6 @@ const data = ref([
 
 const username = props.user.username;
 const token = props.token;
-console.log(props.user.username);
 const toEdit = () => {
   router.push("/user/edit");
 };
