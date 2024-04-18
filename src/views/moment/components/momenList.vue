@@ -39,16 +39,9 @@ onMounted(() => {
 
 <template>
   <div class="content">
-    <a-comment v-for="item in moments" :datetime="item.createAt" :key="item.id" class="content-item" align="right">
-      <template #author>
-        <div class="author-info">
-          <router-link :to="`/user/${item.user.username}`" target="_blank">
-            {{ item.user.username }}
-          </router-link>
-        </div>
-        <img class="content-img" v-if="item.images && item.images.length > 0" :src="item.images[0]" alt="" />
-      </template>
+    <a-comment v-for="item in moments" :key="item.id" class="content-item" align="right">
       <template #actions>
+        <a-tag v-for="(tag, index) in item.labels" :key="index">{{ tag }}</a-tag>
         <span class="action" key="heart" @click="onLikeChange(item.id)">
           <span v-if="likes[item.id]">
             <IconHeartFill :style="{ color: '#f53f3f' }" />
@@ -60,20 +53,30 @@ onMounted(() => {
         </span>
         <span class="action" key="reply"> <IconMessage /> {{ item.commentCount }} </span>
       </template>
-      <template #avatar>
-        <router-link :to="`/user/${item.user.username}`" target="_blank">
-          <div class="avatar-info">
-            <a-avatar>
-              <img alt="avatar" :src="item.user.avatar" />
-            </a-avatar>
-          </div>
-        </router-link>
-      </template>
+      <template #avatar> </template>
       <template #content>
         <div class="moment-content">
-          <router-link :to="`/detail/${item.id}`" target="_blank">
-            {{ item.content }}
+          <router-link :to="`/user/${item.user.nickname}`" target="_blank">
+            <div class="author-info">
+              <a-avatar :size="32">
+                <img alt="avatar" :src="item.user.avatar" />
+              </a-avatar>
+              <div class="author-right">
+                <router-link :to="`/user/${item.user.nickname}`" target="_blank">
+                  {{ item.user.nickname }}
+                </router-link>
+              </div>
+            </div>
           </router-link>
+          <div>
+            <router-link :to="`/detail/${item.id}`" target="_blank">
+              {{ item.content }}
+            </router-link>
+          </div>
+          <div v-if="item.images && item.images.length > 0">
+            <img class="content-img" v-for="(image, index) in item.images" :key="index" :src="image" alt="" />
+          </div>
+          <span style="font-size: 12px; color: #777777">{{ item.createAt }}</span>
         </div>
       </template>
     </a-comment>
@@ -90,13 +93,13 @@ onMounted(() => {
 <style lang="scss" scoped>
 .content {
   width: 60%;
-  background-color: var(--theme-bg1);
-  margin: 0 15px;
   padding: 20px;
+  margin: 0 15px;
+  background-color: var(--theme-bg1);
   .content-item {
     display: flex;
-    cursor: pointer;
     align-items: center;
+    cursor: pointer;
     .content-img {
       width: 100px;
       height: 100px;
@@ -107,22 +110,28 @@ onMounted(() => {
 .action {
   display: inline-block;
   padding: 0 4px;
-  color: var(--color-text-1);
   line-height: 24px;
+  color: var(--color-text-1);
+  cursor: pointer;
   background: transparent;
   border-radius: 2px;
-  cursor: pointer;
   transition: all 0.1s ease;
 }
-
 .action:hover {
   background: var(--color-fill-3);
 }
-
-.moment-content:hover a {
-  color: rgb(var(--primary-6));
+.moment-content {
+  .author-info {
+    display: flex;
+    margin-bottom: 10px;
+    &:hover a {
+      color: rgb(var(--primary-6));
+    }
+    .author-right {
+      margin-left: 10px;
+    }
+  }
 }
-
 .loading {
   text-align: center;
 }
