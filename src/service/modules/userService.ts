@@ -1,4 +1,4 @@
-import { authService } from "../request/config";
+import { authService, cmsService } from "../request/config";
 
 // 用户登录
 export function fetchLogin(data: { username: string; password: string }) {
@@ -27,9 +27,9 @@ export function fetchCodeLogin(data: { email: string; verificationCode: string; 
 }
 
 // 获取用户信息
-export function fetchUser(username: string) {
-  return authService.request({
-    url: `/user/${username}`,
+export function fetchUser(id: number) {
+  return cmsService.request({
+    url: `/user/${id}`,
     method: "get"
   });
 }
@@ -43,24 +43,3 @@ export function fetchUser(username: string) {
 //     }
 //   });
 // }
-
-export function fetchEmailVerifyLogin(email: string, code: number) {
-  return authService.request({
-    url: `/loginVerifyCode`,
-    method: "post",
-    data: {
-      email,
-      code
-    }
-  });
-}
-
-export function fetchUpdateUser(user: any) {
-  return authService.request({
-    url: `/user`,
-    method: "put",
-    data: {
-      ...user
-    }
-  });
-}
