@@ -6,8 +6,7 @@
 import { ref } from "vue";
 import userCard from "./components/user-card.vue";
 import userContent from "./components/user-content.vue";
-import { useUserStore } from "@/stores";
-import { useMomentStore } from "@/stores";
+import { useUserStore, useMomentStore } from "@/stores";
 // 当前路由
 import { useRoute } from "vue-router";
 const route = useRoute();
@@ -20,6 +19,7 @@ const userStore = useUserStore();
 const momentStore = useMomentStore();
 const { moments } = storeToRefs(momentStore);
 const isShowLoading = ref(true);
+userStore.getUserInfo(route.query.id);
 const { token, userInfo } = storeToRefs(userStore);
 // 获取动态列表
 const loadMomentHandler = async payload => {
@@ -40,7 +40,7 @@ const createMomentHandler = async payload => {
   const res = await momentStore.createMoment(payload);
   if (res) return Message.error("动态发布失败");
   Message.success("动态发布成功");
-  await momentStore.getMomentList({ pagenum: 1, pagesize: 10, username: route.params.username });
+  await momentStore.getMomentList({ pagenum: 1, pagesize: 10, username: route.query.username });
 };
 
 // 删除动态
@@ -48,7 +48,7 @@ const removeMomentHandler = async id => {
   const res = await momentStore.removeMoment(id);
   if (!res) {
     Message.success("动态删除成功");
-    await momentStore.getMomentList({ pagenum: 1, pagesize: 10, username: route.params.username });
+    await momentStore.getMomentList({ pagenum: 1, pagesize: 10, username: route.query.username });
   } else {
     Message.error("动态删除失败");
   }
