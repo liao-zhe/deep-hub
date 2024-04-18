@@ -21,7 +21,6 @@ const momentStore = useMomentStore();
 const { moments } = storeToRefs(momentStore);
 const isShowLoading = ref(true);
 const { token, userInfo } = storeToRefs(userStore);
-
 // 获取动态列表
 const loadMomentHandler = async payload => {
   const res = await momentStore.getMomentList({
@@ -47,11 +46,9 @@ const createMomentHandler = async payload => {
 // 删除动态
 const removeMomentHandler = async id => {
   const res = await momentStore.removeMoment(id);
-  console.log(moments);
   if (!res) {
     Message.success("动态删除成功");
     await momentStore.getMomentList({ pagenum: 1, pagesize: 10, username: route.params.username });
-    console.log(moments);
   } else {
     Message.error("动态删除失败");
   }
