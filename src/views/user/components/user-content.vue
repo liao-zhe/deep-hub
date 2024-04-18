@@ -60,9 +60,7 @@ const handleOk = () => {
   formData.delete("labels");
   fileList.value.forEach((file, index) => {
     formData.delete("images");
-    // formData.delete("labels");
   });
-  console.log(tagList.value);
   // 添加新的数据
   formData.append("content", momentContent.value);
   formData.append("userId", userStore.userInfo.id);
@@ -78,6 +76,7 @@ const handleOk = () => {
   visible.value = false;
   momentContent.value = "";
   fileList.value = [];
+  tagList.value = [];
 };
 
 const handleCancel = () => {
@@ -119,7 +118,7 @@ const beforeUpload = file => {
   file.url = fileUrl;
   file.uid = uid--;
   fileList.value.push(file);
-  return true;
+  return false;
 };
 </script>
 
@@ -143,11 +142,16 @@ const beforeUpload = file => {
               }"
             />
             <!-- 标签 -->
-            <a-input-tag v-model="tagList" :style="{ width: '320px' }" placeholder="Please Enter" allow-clear />
+            <a-input-tag
+              v-model="tagList"
+              :style="{ width: '100%', marginBottom: '10px' }"
+              placeholder="请输入标签"
+              allow-clear
+            />
             <!-- 文件上传 -->
             <a-upload
+              v-model:file-list="fileList"
               list-type="picture-card"
-              :default-file-list="fileList"
               :auto-upload="false"
               :limit="9"
               image-preview
