@@ -39,9 +39,9 @@ onMounted(() => {
 
 <template>
   <div class="content">
-    <a-comment v-for="item in moments" :key="item.id" class="content-item" align="right">
+    <a-comment v-for="(item, index) in moments" :key="item.id" class="content-item" align="right">
       <template #actions>
-        <a-tag v-for="(tag, index) in item.labels" :key="index">{{ tag }}</a-tag>
+        <a-tag v-for="(tag, i) in item.labels" :key="i">{{ tag }}</a-tag>
         <span class="action" key="heart" @click="onLikeChange(item.id)">
           <span v-if="likes[item.id]">
             <IconHeartFill :style="{ color: '#f53f3f' }" />
@@ -62,7 +62,10 @@ onMounted(() => {
                 <img alt="avatar" :src="item.user.avatar" />
               </a-avatar>
               <div class="author-right">
-                <router-link :to="`/user/${item.user.nickname}`" target="_blank">
+                <router-link
+                  :to="`/user/${item.user.nickname}/?id=${item.userId}&username=${item.user.username}`"
+                  target="_blank"
+                >
                   {{ item.user.nickname }}
                 </router-link>
               </div>
