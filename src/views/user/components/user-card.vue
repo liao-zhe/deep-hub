@@ -39,7 +39,7 @@ const data = ref([
 
 const username = props.user.username;
 const token = props.token;
-
+console.log(props.user.username);
 const toEdit = () => {
   router.push("/user/edit");
 };
@@ -63,7 +63,7 @@ const toEdit = () => {
       </a-descriptions>
     </div>
     <div class="edit-user">
-      <a-button type="outline" v-if="$route.params.username === username && token" @click="toEdit"> 编辑资料 </a-button>
+      <a-button type="outline" v-if="$route.query.username === username && token" @click="toEdit"> 编辑资料 </a-button>
     </div>
   </div>
 </template>

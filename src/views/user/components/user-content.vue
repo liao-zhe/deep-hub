@@ -30,11 +30,12 @@ function loadMomentFn(obj) {
 
 const loadingRef = ref();
 onMounted(() => {
+  console.log(route.query);
   const observer = new IntersectionObserver(
     entries => {
       if (entries[0].isIntersecting) {
         currentPage++;
-        loadMomentFn({ pagenum: currentPage, pagesize: pageSize, username: route.params.username, observer });
+        loadMomentFn({ pagenum: currentPage, pagesize: pageSize, username: route.query.username, observer });
       }
     },
     { threshold: 1 }
@@ -126,7 +127,7 @@ const beforeUpload = file => {
   <div class="user-content">
     <a-tabs position="left">
       <a-tab-pane key="1" title="动态">
-        <div class="add-moment-section" v-if="$route.params.username === username && token">
+        <div class="add-moment-section" v-if="$route.query.username === username && token">
           <!-- 发布动态对话框 -->
           <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel" ok-text="发布">
             <template #title> 动态内容 </template>
@@ -174,7 +175,7 @@ const beforeUpload = file => {
               {{ item.likes }}
             </span>
             <span class="action" key="reply"> <IconMessage /> {{ item.commentCount }} </span>
-            <span class="delete" @click="removeMoment(item.id)" v-if="$route.params.username === username && token">
+            <span class="delete" @click="removeMoment(item.id)" v-if="$route.query.username === username && token">
               <icon-delete /> 删除
             </span>
           </template>
