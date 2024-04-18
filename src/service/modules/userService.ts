@@ -27,7 +27,7 @@ export function fetchCodeLogin(data: { email: string; verificationCode: string; 
 }
 
 // 获取用户信息
-export function fetchUser(id: number) {
+export function fetchUser(id: string) {
   return cmsService.request({
     url: `/user/${id}`,
     method: "get"
