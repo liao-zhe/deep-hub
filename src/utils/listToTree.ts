@@ -2,7 +2,7 @@ export default function listToTree(
   list: {
     [prop: string]: any;
   }[],
-  parentFiledName = "parentId",
+  parentFiledName = "replayId",
   subFiledName = "children"
 ) {
   const info = list.reduce((map, node) => ((map[node.id] = node), (node[subFiledName] = []), map), {});

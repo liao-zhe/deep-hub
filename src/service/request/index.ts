@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Message } from "@arco-design/web-vue";
-
+import { useUserStore } from "@/stores";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import router from "@/router";
 
@@ -19,10 +19,9 @@ class Service {
     // 每个实例都添加拦截器
     this.instance.interceptors.request.use(
       config => {
-        // const userStore = useUserStore();
-        const res = localStorage.getItem("token");
+        const userStore = useUserStore();
         if (config.headers && typeof config.headers.set === "function") {
-          config.headers.set("authorization", "Bearer " + res);
+          config.headers.set("authorization", "Bearer " + userStore.token);
         }
         console.log("全局请求成功的拦截");
         return config;
@@ -35,10 +34,10 @@ class Service {
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => {
         const { data } = response;
-        // const userStore = useUserStore();
+        const userStore = useUserStore();
         // 登录失效
         if (data.code == 401) {
-          // userStore.setToken("");
+          userStore.setToken("");
           router.replace("/login");
           Message.error(data.message);
           return Promise.reject(data);
