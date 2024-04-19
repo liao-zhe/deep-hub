@@ -8,7 +8,7 @@ import commentView from "@/components/comment/comment-view.vue";
 
 const route = useRoute();
 const detailStore = useDetailStore();
-detailStore.getMomentList(route.params.id);
+detailStore.getOneMoment(route.params.id);
 
 const { momentDetail } = storeToRefs(detailStore);
 </script>
@@ -25,7 +25,7 @@ const { momentDetail } = storeToRefs(detailStore);
   </div>
 </template>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .detail {
   background-color: var(--theme-bg2);
   min-height: calc(100vh - 58px);

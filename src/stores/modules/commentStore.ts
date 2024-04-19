@@ -1,17 +1,17 @@
 import { defineStore } from "pinia";
-import { fetchComment, fetchSendComment, fetchRemoveComment } from "@/service";
+import { fetchComment, fetchSendComment, fetchRemoveComment, fetchLikeComment } from "@/service";
 import listToTree from "../../utils/listToTree";
 import dayjs from "dayjs";
 
 interface commentState {
-  commentList: any[];
+  commentsTree: any;
   commentTotal: number;
 }
 
 export const useCommentStore = defineStore("comment", {
   state: (): commentState => {
     return {
-      commentList: [],
+      commentsTree: "",
       commentTotal: 0
     };
   },
@@ -21,22 +21,24 @@ export const useCommentStore = defineStore("comment", {
       const { data } = await fetchComment(id);
       for (const item of data.data) {
         item.createTime = dayjs(item.createTime).format("YYYY-MM-DD HH:mm");
+        item.content = item.content.replace(/\n/g, "<br>");
       }
-      for (const item of data.data.user) {
-        item.createTime = dayjs(item.createTime).format("YYYY-MM-DD HH:mm");
-      }
-      if (data.data.length === 0) return false;
-      this.commentList = listToTree(data.data);
+      this.commentsTree = listToTree(data.data);
       this.commentTotal = data.total;
     },
     // 创建评论
-    async createComment(momentId: number, content: string, replayId: number | null = null) {
+    async createComment(momentId: number, content: string, replayId: string | null = null) {
       const result = await fetchSendComment(momentId, content, replayId);
       if (result.code !== 200) return result.success;
     },
     // 删除评论
-    async removeComment(id: number) {
+    async removeComment(id: string) {
       const result = await fetchRemoveComment(id);
+      if (result.code !== 200) return result.success;
+    },
+    // 点赞
+    async likeComment(id: number) {
+      const result = await fetchLikeComment(id);
       if (result.code !== 200) return result.success;
     }
   }

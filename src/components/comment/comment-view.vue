@@ -4,25 +4,16 @@ import { useRoute } from "vue-router";
 // 子组件
 import commentRecursive from "./components/comment-recursive.vue";
 // store
-import useUserStore from "@/stores";
-import useCommentStore from "@/stores";
+import { useUserStore, useCommentStore } from "@/stores";
 import { storeToRefs } from "pinia";
+
 import { Notification } from "@arco-design/web-vue";
 
 const userStore = useUserStore();
 const route = useRoute();
 const commentStore = useCommentStore();
-
-//获取评论
 commentStore.getComment(route.params.id);
-const { commentList } = storeToRefs(commentStore);
-
-defineProps({
-  commentList: {
-    type: Object,
-    default: () => ({})
-  }
-});
+const { commentsTree } = storeToRefs(commentStore);
 
 // 评论内容
 const commentContent = ref("");
@@ -34,7 +25,7 @@ const getAvatar = () => {
 
 // 发送评论
 const sendMomentBtn = async () => {
-  const msg = await commentStore.sendComment(route.params.id, commentContent.value);
+  const msg = await commentStore.createComment(route.params.id, commentContent.value);
   if (msg) return Notification.error("评论发表失败");
   Notification.success("评论发表成功");
   commentContent.value = "";
@@ -53,7 +44,7 @@ provide("preReplyState", preReplyState);
   <div class="detail-comment">
     <a-comment align="right" :avatar="getAvatar()">
       <template #actions>
-        <a-button key="1" type="primary" @click="sendMomentBtn" :disabled="!userStore.verifyLogin || !commentContent">
+        <a-button key="1" type="primary" @click="sendMomentBtn" :disabled="!userStore.token || !commentContent">
           发表评论
         </a-button>
       </template>
@@ -62,7 +53,7 @@ provide("preReplyState", preReplyState);
       </template>
     </a-comment>
     <!-- 递归组件 -->
-    <comment-recursive v-if="commentList" :comments="commentList" />
+    <comment-recursive v-if="commentsTree" :comments="commentsTree" />
   </div>
 </template>
 

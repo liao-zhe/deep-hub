@@ -10,6 +10,7 @@ const props = defineProps({
 });
 
 const like = ref(false);
+// 跳转至用户详情页
 const toUserHandler = () => {
   router.push(`/user/${props.momentDetail.user.username}`);
 };
@@ -21,13 +22,14 @@ const toUserHandler = () => {
       align="right"
       :author="momentDetail.user.nickname"
       :content="momentDetail.content"
-      :datetime="momentDetail.createAt"
+      :datetime="momentDetail.createTime"
     >
       <template #avatar>
         <a-avatar @click="toUserHandler()">
           <img alt="avatar" :src="momentDetail.user.avatar" />
         </a-avatar>
       </template>
+      <a-tag v-for="(tag, index) in momentDetail.labels" :key="index">{{ tag }}</a-tag>
       <template #actions>
         <span class="action" key="heart">
           <span v-if="like">
@@ -38,7 +40,7 @@ const toUserHandler = () => {
           </span>
           {{ momentDetail.likes }}
         </span>
-        <span class="action" key="reply"> <IconMessage /> {{ momentDetail.commentCount }} </span>
+        <span class="action" key="reply"> <IconMessage /> {{ momentDetail.viewCount }} </span>
       </template>
     </a-comment>
   </div>

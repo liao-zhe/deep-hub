@@ -1,7 +1,6 @@
 <script setup>
 import { reactive, inject, ref } from "vue";
-import useUserStore from "@/stores";
-import useCommentStore from "@/stores";
+import { useUserStore, useCommentStore } from "@/stores";
 import { useRoute } from "vue-router";
 import { Notification } from "@arco-design/web-vue";
 
@@ -18,7 +17,6 @@ defineProps({
 });
 
 const replyContent = reactive({});
-
 const isShowReplies = inject("isShowReplies");
 const preReplyState = inject("preReplyState");
 // 切换回复区域显示或隐藏
@@ -31,7 +29,7 @@ const toggleReply = id => {
 };
 // 回复按钮
 const replyBtn = async id => {
-  const msg = await commentStore.sendComment(route.params.id, replyContent[id], id);
+  const msg = await commentStore.createComment(route.params.id, replyContent[id], id);
   if (msg) return Notification.error("回复失败");
   await commentStore.getComment(route.params.id);
   // 回复评论，且获取到评论后，隐藏回复区域
@@ -40,9 +38,10 @@ const replyBtn = async id => {
   replyContent[id] = "";
   Notification.success("回复成功");
 };
+console.log(userStore.userInfo, commentStore.commentsTree);
 // 控制用户是否可以删除
 const isDelete = username => {
-  return localStorage.getItem("username") === username;
+  return userStore.userInfo.username === username;
 };
 
 const visible = ref(false);
@@ -79,12 +78,7 @@ const deleteOk = async () => {
       <template #content>
         <div v-show="isShowReplies[item.id]" class="replySection">
           <a-textarea v-model="replyContent[item.id]" placeholder="欢迎评论" :max-length="255" allow-clear show-word-limit />
-          <a-button
-            key="1"
-            type="primary"
-            @click="replyBtn(item.id)"
-            :disabled="!userStore.verifyLogin || !replyContent[item.id]"
-          >
+          <a-button key="1" type="primary" @click="replyBtn(item.id)" :disabled="!userStore.tokne || !replyContent[item.id]">
             回复评论
           </a-button>
         </div>
