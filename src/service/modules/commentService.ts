@@ -7,10 +7,12 @@ export function fetchComment(id: number) {
     url: `/moment-comment/${id}`
   });
 }
-export function fetchSendComment(momentId: number, content: string, replayId: number | null = null) {
+
+// 创建评论
+export function fetchSendComment(momentId: number, content: string, replayId: string | null = null) {
   return cmsService.request({
     method: "post",
-    url: `/moment-comment/`,
+    url: `/moment-comment`,
     data: {
       momentId,
       content,
@@ -18,12 +20,18 @@ export function fetchSendComment(momentId: number, content: string, replayId: nu
     }
   });
 }
-//
-export function fetchRemoveComment(id: number) {
+//删除评论
+export function fetchRemoveComment(id: string) {
   return cmsService.request({
     method: "delete",
     url: `/moment-comment/${id}`
   });
 }
 
-// 点赞
+// 切换点赞
+export function likeComment(id: string) {
+  return cmsService.request({
+    method: "post",
+    url: `/moment-comment/toggle-likes/${id}`
+  });
+}
