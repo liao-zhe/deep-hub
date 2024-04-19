@@ -29,7 +29,7 @@ export function fetchRemoveComment(id: string) {
 }
 
 // 切换点赞
-export function likeComment(id: string) {
+export function fetchLikeComment(id: string) {
   return cmsService.request({
     method: "post",
     url: `/moment-comment/toggle-likes/${id}`
