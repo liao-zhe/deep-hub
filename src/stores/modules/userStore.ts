@@ -17,6 +17,9 @@ export const useUserStore = defineStore("user", {
     setToken(token: string) {
       this.token = token;
     },
+    setUserInfo(userInfo: UserState["userInfo"]) {
+      this.userInfo = userInfo;
+    },
     async getUserInfo(id: string) {
       const res = await fetchUser(id);
       if (res.code !== 200) return res.success;
