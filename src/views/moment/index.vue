@@ -4,9 +4,11 @@ import momenList from "./components/momenList.vue";
 import slidebarView from "../../components/slidebar/sidebar-view.vue";
 import userlistView from "../../components/userlist/userlist-view.vue";
 import "@arco-design/web-vue/es/message/style/css.js";
-import { useMomentStore } from "@/stores";
+import { useMomentStore, useHomeStore } from "@/stores";
 import { storeToRefs } from "pinia";
 const momentStore = useMomentStore();
+const homeStore = useHomeStore();
+
 const { moments } = storeToRefs(momentStore);
 // 控制loading的显示和隐藏
 const isShowLoading = ref(true);
@@ -26,7 +28,7 @@ const loadMomentHandler = async payload => {
     <div class="home-container">
       <slidebar-view />
       <momen-list :moments="moments" :is-show-loading="isShowLoading" @load-moment="loadMomentHandler"></momen-list>
-      <userlist-view />
+      <userlist-view :users="homeStore.users" />
     </div>
   </div>
 </template>
