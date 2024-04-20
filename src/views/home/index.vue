@@ -3,12 +3,12 @@ import { ref } from "vue";
 import "@arco-design/web-vue/es/message/style/css.js";
 // import { Message } from '@arco-design/web-vue'
 import sidebarView from "../../components/slidebar/sidebar-view.vue";
-import contentView from "./components/content/content-view.vue";
+import contentView from "./components/content-view.vue";
 import userlistView from "../../components/userlist/userlist-view.vue";
 import { useHomeStore } from "@/stores";
 import { storeToRefs } from "pinia";
 const homeStore = useHomeStore();
-homeStore.getUserList(1, 10, 2);
+homeStore.getUserList(1, 10);
 const { moments } = storeToRefs(homeStore);
 // 控制loading的显示和隐藏
 const isShowLoading = ref(true);
