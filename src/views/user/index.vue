@@ -20,8 +20,7 @@ const momentStore = useMomentStore();
 const { moments } = storeToRefs(momentStore);
 const isShowLoading = ref(true);
 userStore.getUserInfo(route.query.id);
-const { token, userInfo } = storeToRefs(userStore);
-console.log(userInfo);
+const { token, userInfo, otherUserInfo } = storeToRefs(userStore);
 // 获取动态列表
 const loadMomentHandler = async payload => {
   const res = await momentStore.getMomentList({
@@ -70,7 +69,7 @@ const removeMomentHandler = async id => {
 <template>
   <div class="user-view">
     <div class="user-container">
-      <user-card v-if="userInfo" :user="userInfo" :token="token"></user-card>
+      <user-card v-if="otherUserInfo" :current-user="otherUserInfo" :token="token" :user-info="userInfo"></user-card>
       <user-content
         v-if="moments"
         :moments="moments"
