@@ -7,7 +7,7 @@ import "@arco-design/web-vue/es/message/style/css.js";
 import { useMomentStore } from "@/stores";
 import { storeToRefs } from "pinia";
 const momentStore = useMomentStore();
-const { moments, momentTotalCount } = storeToRefs(momentStore);
+const { moments } = storeToRefs(momentStore);
 // 控制loading的显示和隐藏
 const isShowLoading = ref(true);
 const loadMomentHandler = async payload => {
