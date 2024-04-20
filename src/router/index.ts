@@ -49,6 +49,15 @@ const router = createRouter({
       }
     },
     {
+      path: "/questionAnswer",
+      name: "questionAnswer",
+      component: () => import("@/views/questionAnswer/index.vue"),
+      meta: {
+        title: "问答",
+        isNavbar: true
+      }
+    },
+    {
       path: "/detail/:id",
       name: "detail",
       component: () => import("@/views/detail/index.vue"),
