@@ -12,8 +12,8 @@ if (userStore.token) {
   verifyLogin.value = true;
 }
 
-const username = () => {
-  return userStore.userInfo.username;
+const nickname = () => {
+  return userStore.userInfo.nickname;
 };
 const visible = ref(false);
 // 注销登录
@@ -87,7 +87,10 @@ const toQuestionAnswer = () => {
             <img :src="userStore.userInfo.avatar ? userStore.userInfo.avatar : userStore.defaultAvatar" alt="" />
           </a-avatar>
           <template #content>
-            <router-link :to="`/user/${username()}`" target="_blank">
+            <router-link
+              :to="`/user/${nickname()}/?id=${userStore.userInfo.id}&username=${userStore.userInfo.username}`"
+              target="_blank"
+            >
               <p class="central">个人中心</p>
             </router-link>
             <p @click="signoutClick" class="signout">退出登录</p>
