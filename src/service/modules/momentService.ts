@@ -14,7 +14,7 @@ export function fetchCreateMomentVideo(formData: any) {
   return cmsService.request({
     url: "/moment/video",
     method: "post",
-    body: formData
+    data: formData
   });
 }
 
