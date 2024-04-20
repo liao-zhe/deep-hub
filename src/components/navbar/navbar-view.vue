@@ -1,9 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useUserStore } from "@/stores";
+import { useUserStore, useMomentStore } from "@/stores";
 import { storeToRefs } from "pinia";
 const userStore = useUserStore();
+const momentStore = useMomentStore();
 const { verifyLogin } = storeToRefs(userStore);
 const router = useRouter();
 // 检查是否登录
@@ -23,8 +24,8 @@ const signoutClick = () => {
 const handleOk = () => {
   userStore.setToken("");
   userStore.setUserInfo("");
-  verifyLogin.value = false;
   router.replace("/home");
+  verifyLogin.value = false;
 };
 // 进入登录界面
 const signinClick = () => {
@@ -42,6 +43,7 @@ const toHome = () => {
 // 进入动态界面
 const toMoment = () => {
   router.push("/moment");
+  momentStore.getMomentList({ pagenum: 1, pagesize: 15 });
 };
 
 const toQuestionAnswer = () => {
@@ -82,7 +84,7 @@ const toQuestionAnswer = () => {
         <icon-notification class="notify" />
         <a-popover v-if="verifyLogin">
           <a-avatar :size="36" class="avatar">
-            <img :src="userStore.userInfo.avatar" alt="" />
+            <img :src="userStore.userInfo.avatar ? userStore.userInfo.avatar : userStore.defaultAvatar" alt="" />
           </a-avatar>
           <template #content>
             <router-link :to="`/user/${username()}`" target="_blank">
