@@ -12,3 +12,4 @@ export * from "./modules/userStore";
 export * from "./modules/momentStore";
 export * from "./modules/detailStore";
 export * from "./modules/commentStore";
+export * from "./modules/articleStore";
