@@ -25,7 +25,7 @@ const getAvatar = () => {
 
 // 发送评论
 const sendMomentBtn = async () => {
-  const msg = await commentStore.createComment(route.params.id, commentContent.value);
+  const msg = await commentStore.createComment(+route.params.id, commentContent.value);
   if (msg) return Notification.error("评论发表失败");
   Notification.success("评论发表成功");
   commentContent.value = "";
@@ -59,7 +59,7 @@ provide("preReplyState", preReplyState);
 
 <style lang="scss" scoped>
 .detail-comment {
-  background-color: var(--color-bg-2);
   padding: 30px;
+  background-color: var(--color-bg-2);
 }
 </style>
