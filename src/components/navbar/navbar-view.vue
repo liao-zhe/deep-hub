@@ -43,6 +43,10 @@ const toHome = () => {
 const toMoment = () => {
   router.push("/moment");
 };
+
+const toQuestionAnswer = () => {
+  router.push("/questionAnswer");
+};
 </script>
 
 <template>
@@ -66,8 +70,7 @@ const toMoment = () => {
         <a-menu mode="horizontal" :default-selected-keys="['1']">
           <a-menu-item key="1" @click="toHome">首页</a-menu-item>
           <a-menu-item key="2" @click="toMoment">动态</a-menu-item>
-          <a-menu-item key="3">资源</a-menu-item>
-          <a-menu-item key="4">问答</a-menu-item>
+          <a-menu-item key="3" @click="toQuestionAnswer">问答</a-menu-item>
         </a-menu>
         <a-input placeholder="请输入搜索内容" allow-clear :style="{ width: '300px', marginRight: '110px' }">
           <template #prefix>
@@ -114,7 +117,6 @@ const toMoment = () => {
 .navbar {
   background-color: var(--color-menu-light-bg);
   box-shadow: 0 0 10px -5px #86909c;
-
   .left,
   .right {
     display: flex;
@@ -129,10 +131,9 @@ const toMoment = () => {
     align-items: center;
     .notify {
       margin-right: 15px;
-      cursor: pointer;
       font-size: 20px;
+      cursor: pointer;
     }
-
     .avatar {
       cursor: pointer;
     }

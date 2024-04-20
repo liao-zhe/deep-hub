@@ -18,7 +18,7 @@ export const useHomeStore = defineStore("home", {
   }),
   actions: {
     async getMomentList(pagenum: number, pagesize: number) {
-      const { data } = await fetchMomentList(pagenum, pagesize);
+      const { data } = await fetchMomentList({ pagenum, pagesize });
 
       // 日期格式化
       console.log(data);
@@ -31,8 +31,10 @@ export const useHomeStore = defineStore("home", {
       }
       this.momentTotalCount = data.total;
     },
-    async getUserList(pagenum: number, pagesize: number, gender: number) {
+    async getUserList(pagenum: number, pagesize: number, gender?: number) {
       const res = await fetchUserList(pagenum, pagesize, gender);
+      console.log(res);
+
       this.users = res.data.list;
     }
   }

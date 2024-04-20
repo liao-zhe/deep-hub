@@ -14,33 +14,46 @@ const like = ref(false);
 const toUserHandler = () => {
   router.push(`/user/${props.momentDetail.user.username}`);
 };
+
+const onChangeClick = () => {
+  like.value = !like.value;
+};
 </script>
 
 <template>
   <div class="moment-content">
-    <a-comment
-      align="right"
-      :author="momentDetail.user.nickname"
-      :content="momentDetail.content"
-      :datetime="momentDetail.createTime"
-    >
+    <a-comment align="right" :author="momentDetail.user.nickname" :datetime="momentDetail.createTime">
       <template #avatar>
         <a-avatar @click="toUserHandler()">
           <img alt="avatar" :src="momentDetail.user.avatar" />
         </a-avatar>
       </template>
-      <a-tag v-for="(tag, index) in momentDetail.labels" :key="index">{{ tag }}</a-tag>
       <template #actions>
-        <span class="action" key="heart">
-          <span v-if="like">
-            <IconHeartFill :style="{ color: '#f53f3f' }" />
-          </span>
+        <span class="action" key="heart" @click="onChangeClick">
+          <span v-if="like"> <IconHeartFill :style="{ color: '#f53f3f' }" /> </span>
           <span v-else>
             <IconHeart />
           </span>
-          {{ momentDetail.likes }}
+          {{ momentDetail.momentLikes + (like ? 1 : 0) }}
         </span>
-        <span class="action" key="reply"> <IconMessage /> {{ momentDetail.viewCount }} </span>
+        <span class="action" key="reply"> <icon-eye /> {{ momentDetail.viewCount }} </span>
+      </template>
+      <div style="display: flex; justify-content: flex-end">
+        <a-tag v-for="(tag, index) in momentDetail.labels" :key="index">{{ tag }}</a-tag>
+      </div>
+      <template #content>
+        <div>
+          {{ momentDetail.content }}
+          <div>
+            <img
+              v-for="(image, index) in momentDetail.images"
+              :key="index"
+              :src="image"
+              alt=""
+              style="height: 200px; margin-right: 10px"
+            />
+          </div>
+        </div>
       </template>
     </a-comment>
   </div>
@@ -48,8 +61,8 @@ const toUserHandler = () => {
 
 <style scoped>
 .moment-content {
-  background-color: var(--color-bg-2);
   padding: 30px;
   margin-bottom: 10px;
+  background-color: var(--color-bg-2);
 }
 </style>
