@@ -21,6 +21,7 @@ const { moments } = storeToRefs(momentStore);
 const isShowLoading = ref(true);
 userStore.getUserInfo(route.query.id);
 const { token, userInfo } = storeToRefs(userStore);
+console.log(userInfo);
 // 获取动态列表
 const loadMomentHandler = async payload => {
   const res = await momentStore.getMomentList({

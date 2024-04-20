@@ -65,16 +65,16 @@ const router = createRouter({
         title: "用户主页",
         isNavbar: true
       }
+    },
+    {
+      path: "/user/edit",
+      name: "edituser",
+      component: () => import("@/views/edituser/index.vue"),
+      meta: {
+        title: "个人资料编辑",
+        isNavbar: true
+      }
     }
-    // {
-    //   path: "/user/edit",
-    //   name: "edituser",
-    //   component: () => import("@/views/"),
-    //   meta: {
-    //     title: "个人资料编辑",
-    //     isNavbar: true
-    //   }
-    // }
   ]
 });
 

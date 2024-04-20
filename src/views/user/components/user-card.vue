@@ -1,8 +1,9 @@
 <script setup>
 import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import dayjs from "dayjs";
 const router = useRouter();
+const route = useRoute();
 const props = defineProps({
   user: {
     type: Object,
@@ -40,7 +41,7 @@ const data = ref([
 const username = props.user.username;
 const token = props.token;
 const toEdit = () => {
-  router.push("/user/edit");
+  router.push(`/user/edit`);
 };
 </script>
 

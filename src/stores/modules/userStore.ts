@@ -17,6 +17,8 @@ export const useUserStore = defineStore("user", {
   }),
   getters: {},
   actions: {
+    //
+
     setToken(token: string) {
       this.token = token;
     },
@@ -31,8 +33,8 @@ export const useUserStore = defineStore("user", {
       this.userInfo = res.data;
     },
     // 更新用户信息
-    async updateUser(formData: any) {
-      const res = await fetchUpdateUser(formData);
+    async updateUser(id: string, formData: any) {
+      const res = await fetchUpdateUser(id, formData);
       if (res.code !== 200) return res.success;
     }
   },

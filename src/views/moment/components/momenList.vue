@@ -56,7 +56,7 @@ onMounted(() => {
       <template #avatar> </template>
       <template #content>
         <div class="moment-content">
-          <router-link :to="`/user/${item.user.nickname}`" target="_blank">
+          <router-link :to="`/user/${item.user.nickname}/?id=${item.userId}&username=${item.user.username}`" target="_blank">
             <div class="author-info">
               <a-avatar :size="32">
                 <img alt="avatar" :src="item.user.avatar" />

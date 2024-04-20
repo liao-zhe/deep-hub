@@ -34,12 +34,11 @@ export function fetchUser(id: string) {
   });
 }
 
-// export function fetchEmialVerifyCode(email: string) {
-//   return authService.request({
-//     url: `/sendEmail`,
-//     method: "post",
-//     data: {
-//       email
-//     }
-//   });
-// }
+// 更新用户信息
+export function fetchUpdateUser(id: string, formData: any) {
+  return cmsService.request({
+    url: `/user/update/${id}`,
+    method: "patch",
+    data: formData
+  });
+}
