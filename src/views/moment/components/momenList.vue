@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted, defineEmits } from "vue";
 import { IconHeart, IconMessage, IconHeartFill } from "@arco-design/web-vue/es/icon";
-
+import { useUserStore } from "@/stores";
+const userStore = useUserStore();
 const likes = ref({});
 const onLikeChange = id => {
   if (!likes.value[id]) return (likes.value[id] = true);
@@ -22,7 +23,6 @@ const emits = defineEmits(["loadMoment"]);
 function loadMomentFn(obj) {
   emits("loadMoment", obj);
 }
-
 const loadingRef = ref();
 onMounted(() => {
   const observer = new IntersectionObserver(
@@ -59,7 +59,7 @@ onMounted(() => {
           <router-link :to="`/user/${item.user.nickname}/?id=${item.userId}&username=${item.user.username}`" target="_blank">
             <div class="author-info">
               <a-avatar :size="32">
-                <img alt="avatar" :src="item.user.avatar" />
+                <img alt="avatar" :src="item.user.avatar ? item.user.avatar : userStore.defaultAvatar" />
               </a-avatar>
               <div class="author-right">
                 <router-link
@@ -77,7 +77,9 @@ onMounted(() => {
             </router-link>
           </div>
           <div v-if="item.images && item.images.length > 0">
-            <img class="content-img" v-for="(image, index) in item.images" :key="index" :src="image" alt="" />
+            <router-link :to="`/detail/${item.id}`" target="_blank">
+              <img class="content-img" v-for="(image, index) in item.images" :key="index" :src="image" alt="" />
+            </router-link>
           </div>
           <span style="font-size: 12px; color: #777777">{{ item.createAt }}</span>
         </div>
