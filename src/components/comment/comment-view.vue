@@ -20,7 +20,7 @@ const commentContent = ref("");
 
 // 获取用户头像
 const getAvatar = () => {
-  return localStorage.getItem("avatar");
+  return userStore.userInfo.avatar ? userStore.userInfo.avatar : userStore.defaultAvatar;
 };
 
 // 发送评论
