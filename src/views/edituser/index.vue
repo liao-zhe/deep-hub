@@ -14,7 +14,6 @@ const userStore = useUserStore();
 const { userInfo } = userStore;
 const formData = new FormData();
 const user = userInfo;
-console.log(user);
 const formDataAppend = () => {
   formData.append("nickname", user.nickname);
   formData.append("bio", user.bio);
@@ -29,19 +28,30 @@ const formDataAppend = () => {
   formData.append("id", user.id);
 };
 
+const deleteFormData = () => {
+  formData.delete("avatar");
+  formData.delete("nickname");
+  formData.delete("bio");
+  formData.delete("gender");
+  formData.delete("phone");
+  formData.delete("email");
+  formData.delete("birthday");
+  formData.delete("school");
+  formData.delete("major");
+  formData.delete("position");
+  formData.delete("github");
+  formData.delete("id");
+};
 const handleSubmit = async () => {
   formDataAppend();
-  formData.forEach((value, key) => {
-    console.log(key, value);
-  });
-  console.log(userInfo);
   await userStore.updateUser(user.id, formData);
   await userStore.getUserInfo(userInfo.id);
   Message.success("个人信息修改成功");
-  router.push(`/user/${username}/?id=${userInfo.id}&username=${username}`);
+  router.push(`/user/${userInfo.nickname}/?id=${userInfo.id}&username=${userInfo.username}`);
   setTimeout(() => {
     router.go(0);
   }, 0);
+  deleteFormData();
 };
 
 const onChangeBirthday = value => {
@@ -72,7 +82,6 @@ const beforeUpload = file => {
 };
 // 自行上传
 const customRequest = option => {
-  console.log(option);
   const { fileItem } = option;
   formData.append("avatar", fileItem.file);
 };
