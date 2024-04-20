@@ -30,7 +30,6 @@ function loadMomentFn(obj) {
 
 const loadingRef = ref();
 onMounted(() => {
-  console.log(route.query);
   const observer = new IntersectionObserver(
     entries => {
       if (entries[0].isIntersecting) {
