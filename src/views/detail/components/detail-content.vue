@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores";
+const userStore = useUserStore();
 const router = useRouter();
 const props = defineProps({
   momentDetail: {
@@ -25,7 +27,7 @@ const onChangeClick = () => {
     <a-comment align="right" :author="momentDetail.user.nickname" :datetime="momentDetail.createTime">
       <template #avatar>
         <a-avatar @click="toUserHandler()">
-          <img alt="avatar" :src="momentDetail.user.avatar" />
+          <img alt="avatar" :src="momentDetail.user.avatar ? momentDetail.user.avatar : userStore.defaultAvatar" />
         </a-avatar>
       </template>
       <template #actions>
