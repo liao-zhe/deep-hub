@@ -14,7 +14,9 @@ const props = defineProps({
 const like = ref(false);
 // 跳转至用户详情页
 const toUserHandler = () => {
-  router.push(`/user/${props.momentDetail.user.username}`);
+  router.push(
+    `/user/${props.momentDetail.user.nickname}/?id=${props.momentDetail.userId}&username=${props.momentDetail.user.username}`
+  );
 };
 
 const onChangeClick = () => {
