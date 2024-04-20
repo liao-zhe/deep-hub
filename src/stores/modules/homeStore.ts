@@ -33,8 +33,6 @@ export const useHomeStore = defineStore("home", {
     },
     async getUserList(pagenum: number, pagesize: number, gender?: number) {
       const res = await fetchUserList(pagenum, pagesize, gender);
-      console.log(res);
-
       this.users = res.data.list;
     }
   }
