@@ -39,7 +39,7 @@ onMounted(() => {
 
 <template>
   <div class="content">
-    <a-comment v-for="(item, index) in moments" :key="item.id" class="content-item" align="right">
+    <a-comment v-for="item in moments" :key="item.id" class="content-item" align="right">
       <template #actions>
         <a-tag v-for="(tag, i) in item.labels" :key="i">{{ tag }}</a-tag>
         <span class="action" key="heart" @click="onLikeChange(item.id)">

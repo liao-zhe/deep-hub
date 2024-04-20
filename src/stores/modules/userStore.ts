@@ -5,12 +5,15 @@ export interface UserState {
   token: string;
   verifyLogin: boolean;
   userInfo: {};
+  defaultAvatar: string;
 }
 export const useUserStore = defineStore("user", {
   state: (): UserState => ({
     token: "",
     verifyLogin: false,
-    userInfo: {}
+    userInfo: {},
+    defaultAvatar:
+      "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
   }),
   getters: {},
   actions: {

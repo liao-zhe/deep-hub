@@ -24,11 +24,13 @@ export const useCommentStore = defineStore("comment", {
         item.content = item.content.replace(/\n/g, "<br>");
       }
       this.commentsTree = listToTree(data.data);
+      console.log(this.commentsTree);
+
       this.commentTotal = data.total;
     },
     // 创建评论
-    async createComment(momentId: number, content: string, replayId: string | null = null) {
-      const result = await fetchSendComment(momentId, content, replayId);
+    async createComment(momentId: number, content: string, replyId: string | null = null) {
+      const result = await fetchSendComment(Number(momentId), content, replyId);
       if (result.code !== 200) return result.success;
     },
     // 删除评论

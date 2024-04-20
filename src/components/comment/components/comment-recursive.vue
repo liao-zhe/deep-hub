@@ -11,8 +11,8 @@ const commentStore = useCommentStore();
 
 defineProps({
   comments: {
-    type: Object,
-    default: () => ({})
+    type: Array,
+    default: () => []
   }
 });
 
@@ -29,19 +29,14 @@ const toggleReply = id => {
 };
 // 回复按钮
 const replyBtn = async id => {
-  const msg = await commentStore.createComment(route.params.id, replyContent[id], id);
+  const msg = await commentStore.createComment(+route.params.id, replyContent[id], id);
   if (msg) return Notification.error("回复失败");
-  await commentStore.getComment(route.params.id);
+  await commentStore.getComment(+route.params.id);
   // 回复评论，且获取到评论后，隐藏回复区域
   isShowReplies[id] = false;
   // 清空评论输入框
   replyContent[id] = "";
   Notification.success("回复成功");
-};
-console.log(userStore.userInfo, commentStore.commentsTree);
-// 控制用户是否可以删除
-const isDelete = username => {
-  return userStore.userInfo.username === username;
 };
 
 const visible = ref(false);
@@ -66,19 +61,17 @@ const deleteOk = async () => {
     <div><icon-exclamation-circle-fill style="color: rgb(var(--warning-6))" /> 你确定要删除此评论吗?</div>
   </a-modal>
   <a-comment
-    class="moments"
     v-for="item in comments"
-    :comments="comments"
     :key="item.id"
     :author="item.user.nickname"
-    :avatar="item.user.avatar"
-    :datetime="item.createAt"
+    :avatar="item.user.avatar ?? userStore.defaultAvatar"
+    :datetime="item.createTime"
   >
     <a-comment>
       <template #content>
         <div v-show="isShowReplies[item.id]" class="replySection">
           <a-textarea v-model="replyContent[item.id]" placeholder="欢迎评论" :max-length="255" allow-clear show-word-limit />
-          <a-button key="1" type="primary" @click="replyBtn(item.id)" :disabled="!userStore.tokne || !replyContent[item.id]">
+          <a-button key="1" type="primary" @click="replyBtn(item.id)" :disabled="!userStore.token || !replyContent[item.id]">
             回复评论
           </a-button>
         </div>
@@ -92,17 +85,23 @@ const deleteOk = async () => {
           <a-popover>
             <div style="cursor: pointer">...</div>
             <template #content>
-              <div class="delete" v-if="isDelete(item.user.username)" @click="deleteBtn(item.id)">删除</div>
-              <div class="report">举报</div>
+              <div
+                class="delete"
+                v-if="userStore.token && userStore.userInfo.username === item.user.username"
+                @click="deleteBtn(item.id)"
+              >
+                删除
+              </div>
+              <div class="report" v-if="userStore.token">举报</div>
             </template>
           </a-popover>
         </div>
       </template>
     </a-comment>
     <!-- 递归组件 -->
-    <comment-recursive v-if="item.replies" :comments="item.replies" />
+    <comment-recursive v-if="item" :comments="item.replies" />
     <template #content>
-      <div v-html="item.content"></div>
+      <div>{{ item.content }}</div>
     </template>
   </a-comment>
 </template>
@@ -122,12 +121,11 @@ const deleteOk = async () => {
   justify-content: space-between;
   .delete {
     color: rgb(var(--danger-6));
-    // opacity: 0;
   }
 }
 .report:hover,
 .delete:hover {
-  cursor: pointer;
   text-decoration: underline;
+  cursor: pointer;
 }
 </style>
