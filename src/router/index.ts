@@ -83,6 +83,15 @@ const router = createRouter({
         title: "个人资料编辑",
         isNavbar: true
       }
+    },
+    {
+      path: "/questiondetail/:id",
+      name: "questiondetail",
+      component: () => import("@/views/questionDetail/index.vue"),
+      meta: {
+        title: "问答详情",
+        isNavbar: true
+      }
     }
   ]
 });
