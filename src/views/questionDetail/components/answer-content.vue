@@ -1,7 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useUserStore, useQuestionStore } from "@/stores";
+import { Notification } from "@arco-design/web-vue";
+
+const route = useRoute();
 const userStore = useUserStore();
 const questionStore = useQuestionStore();
 const likes = ref({});
@@ -35,9 +38,28 @@ onMounted(() => {
   );
   observer.observe(loadingRef.value);
 });
+const visible = ref(false);
+const curCommentId = ref("");
+// 删除按钮
+const deleteBtn = id => {
+  console.log(id);
+  curCommentId.value = id;
+  visible.value = true;
+};
+// 确认删除
+const deleteOk = async () => {
+  visible.value = false;
+  const msg = await questionStore.removeAnswer(curCommentId.value);
+  if (msg) return Notification.error("删除失败");
+  await questionStore.getAnswerList(route.params.id, { pagenum: 1, pagesize: 15 });
+  Notification.success("删除成功");
+};
 </script>
 
 <template>
+  <a-modal v-model:visible="visible" @ok="deleteOk" type="warning" :simple="true">
+    <div><icon-exclamation-circle-fill style="color: rgb(var(--warning-6))" /> 你确定要删除此评论吗?</div>
+  </a-modal>
   <div class="content">
     <a-comment v-for="item in answerList" :key="item.id" class="content-item" align="right">
       <template #actions>
@@ -50,9 +72,20 @@ onMounted(() => {
           </span>
           {{ item.likes }}
         </span>
-        <span class="action" key="reply"> <IconMessage /> {{ item.total }} </span>
+        <a-popover>
+          <div style="cursor: pointer">...</div>
+          <template #content>
+            <div
+              class="delete"
+              v-if="userStore.token && userStore.userInfo.username === item.user.username"
+              @click="deleteBtn(item.id)"
+            >
+              删除
+            </div>
+            <div class="report" v-if="userStore.token">举报</div>
+          </template>
+        </a-popover>
       </template>
-      <template #avatar> </template>
       <template #content>
         <div class="moment-content">
           <router-link :to="`/user/${item.user.nickname}/?id=${item.userId}&username=${item.user.username}`" target="_blank">
@@ -131,5 +164,17 @@ onMounted(() => {
 }
 .loading {
   text-align: center;
+}
+.action-comment {
+  display: flex;
+  justify-content: space-between;
+  .delete {
+    color: rgb(var(--danger-6));
+  }
+}
+.report:hover,
+.delete:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

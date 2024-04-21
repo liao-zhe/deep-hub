@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, defineEmits } from "vue";
+import dayjs from "dayjs";
 
 defineProps({
   articles: {
@@ -35,10 +36,10 @@ onMounted(() => {
   <div class="content">
     <div v-for="item in articles" :datetime="item.createTime" :key="item.id" class="content-item">
       <div class="" style="display: flex; justify-content: space-between">
-        <div style="cursor: pointer">
+        <div style="width: 100%; cursor: pointer">
           <router-link :to="`/articleDetail/${item.id}`">
             <div style="font-size: 20px; font-weight: 800">{{ item.title }}</div>
-            <div class="content" style="font-size: 16px">
+            <div class="content" style="box-sizing: border-box; width: 100%; font-size: 16px">
               {{ item.content }}
             </div>
           </router-link>
@@ -52,14 +53,18 @@ onMounted(() => {
             </router-link>
             <span style="padding: 0 5px; color: #e1e1e1">|</span>
             <span><icon-eye /> {{ item.viewCount }} </span>
+            <span style="padding: 0 5px; color: #e1e1e1">|</span>
+            <span>{{ dayjs(item.createTime).format("YYYY-MM-DD HH:mm") }}</span>
           </div>
         </div>
-        <div style="text-align: right">
+        <div style="min-width: fit-content; text-align: right">
           <div v-if="item.cover">
             <img style="height: 100px" :src="item.cover" alt="" />
           </div>
           <div v-else style="height: 100px"></div>
-          <a-tag style="margin-left: 5px" v-for="(label, index) in item.labels" :key="index">{{ label }}</a-tag>
+          <div>
+            <a-tag style="margin-left: 5px" v-for="(label, index) in item.labels" :key="index">{{ label }}</a-tag>
+          </div>
         </div>
       </div>
       <a-divider />

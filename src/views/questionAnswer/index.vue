@@ -13,6 +13,7 @@ const homeStore = useHomeStore();
 const { questions } = storeToRefs(questionStore);
 // 控制loading的显示和隐藏
 const isShowLoading = ref(true);
+questionStore.pagenum = 1;
 const loadQuestionHandler = async payload => {
   const res = await questionStore.getQuestionList({ pagenum: questionStore.pagenum++, pagesize: payload.pagesize });
   // 当res为false表示所有数据都查询出来了，此时要关闭观察器，并隐藏loading
@@ -36,13 +37,13 @@ const loadQuestionHandler = async payload => {
 
 <style lang="scss" scoped>
 .home {
-  background-color: var(--theme-bg2);
   min-height: calc(100vh - 58px);
+  background-color: var(--theme-bg2);
   .home-container {
+    display: flex;
     max-width: 1200px;
     padding: 20px 0;
     margin: 0 auto;
-    display: flex;
   }
 }
 </style>

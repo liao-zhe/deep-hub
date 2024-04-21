@@ -13,6 +13,7 @@ const { moments } = storeToRefs(momentStore);
 // 控制loading的显示和隐藏
 const isShowLoading = ref(true);
 const loadMomentHandler = async payload => {
+  momentStore.pagenum = 1;
   const res = await momentStore.getMomentList({ pagenum: momentStore.pagenum++, pagesize: payload.pagesize });
   // 当res为false表示所有数据都查询出来了，此时要关闭观察器，并隐藏loading
   if (res === false) {

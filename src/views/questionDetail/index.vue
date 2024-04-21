@@ -31,15 +31,15 @@ const loadAnswerHandler = async payload => {
 };
 
 // 回答问题
-const sendAnswer = () => {
+const sendAnswer = async () => {
   const textOnlyContent = content.value.replace(/<[^>]+>/g, "");
-  questionStore
+  await questionStore
     .createAnswer(currentQuestion.value.id, {
       content: textOnlyContent,
       questionId: currentQuestion.value.id,
       userId: currentQuestion.value.userId
     })
-    .then(response => {
+    .then(() => {
       Message.success("回答成功");
     })
     .catch(error => {
@@ -47,13 +47,18 @@ const sendAnswer = () => {
       console.error("Error creating answer:", error);
     });
   questionStore.isEdit = false;
+  content.value = "";
+  await questionStore.getAnswerList(currentQuestion.id, {
+    pagenum: 1,
+    pagesize: 15
+  });
 };
 
 // 删除回答
 const deleteAnswer = id => {
   questionStore
     .removeAnswer(id)
-    .then(response => {
+    .then(() => {
       Message.success("删除回答成功");
     })
     .catch(error => {
@@ -63,17 +68,17 @@ const deleteAnswer = id => {
 };
 
 // 删除问题
-const deleteQuestion = id => {
-  questionStore
-    .removeQuestion(id)
-    .then(response => {
-      Message.success("删除问题成功");
-    })
-    .catch(error => {
-      Message.error("删除问题失败");
-      console.error("Error creating answer:", error);
-    });
-};
+// const deleteQuestion = id => {
+//   questionStore
+//     .removeQuestion(id)
+//     .then(response => {
+//       Message.success("删除问题成功");
+//     })
+//     .catch(error => {
+//       Message.error("删除问题失败");
+//       console.error("Error creating answer:", error);
+//     });
+// };
 </script>
 <template>
   <div class="detail">
@@ -81,9 +86,9 @@ const deleteQuestion = id => {
       <div class="detail-main">
         <question-content v-if="currentQuestion" :question-detail="currentQuestion"></question-content>
         <quill-editor v-if="questionStore.isEdit" theme="snow" v-model:content="content" content-type="html"> </quill-editor>
-        <a-button type="primary" size="small" @click="sendAnswer" v-show="questionStore.isEdit">
-          <template #default>发送回答</template>
-        </a-button>
+        <div style="margin-top: 10px; text-align: right">
+          <a-button type="primary" size="small" @click="sendAnswer" v-show="questionStore.isEdit"> 发送回答 </a-button>
+        </div>
       </div>
       <answer-content
         v-if="answerList"
@@ -96,30 +101,26 @@ const deleteQuestion = id => {
 </template>
 <style lang="scss" scoped>
 .detail {
-  background-color: var(--theme-bg2);
   min-height: calc(100vh - 58px);
   .detail-container {
+    width: 75%;
     max-width: 1200px;
     padding: 20px 0;
     margin: 0 auto;
-    display: flex;
-    .detail-main {
-      width: 75%;
+    background-color: var(--theme-bg2);
+    .action {
+      display: inline-block;
+      padding: 0 4px;
+      line-height: 24px;
+      color: var(--color-text-1);
+      cursor: pointer;
+      background: transparent;
+      border-radius: 2px;
+      transition: all 0.1s ease;
+    }
+    .action:hover {
+      background: var(--color-fill-3);
     }
   }
-}
-
-.action {
-  display: inline-block;
-  padding: 0 4px;
-  color: var(--color-text-1);
-  line-height: 24px;
-  background: transparent;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.1s ease;
-}
-.action:hover {
-  background: var(--color-fill-3);
 }
 </style>
