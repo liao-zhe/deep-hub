@@ -4,16 +4,16 @@ import { useRoute } from "vue-router";
 // 子组件
 import commentRecursive from "./components/comment-recursive.vue";
 // store
-import { useUserStore, useCommentStore } from "@/stores";
+import { useUserStore, useArticleStore } from "@/stores";
 import { storeToRefs } from "pinia";
 
 import { Notification } from "@arco-design/web-vue";
 
 const userStore = useUserStore();
 const route = useRoute();
-const commentStore = useCommentStore();
-commentStore.getComment(route.params.id);
-const { commentsTree } = storeToRefs(commentStore);
+const articleStore = useArticleStore();
+articleStore.getArticleComment(route.params.id);
+const { commentsTree } = storeToRefs(articleStore);
 
 // 评论内容
 const commentContent = ref("");
@@ -25,11 +25,11 @@ const getAvatar = () => {
 
 // 发送评论
 const sendMomentBtn = async () => {
-  const msg = await commentStore.createComment(+route.params.id, commentContent.value);
+  const msg = await articleStore.createArticleComment(+route.params.id, commentContent.value);
   if (msg) return Notification.error("评论发表失败");
   Notification.success("评论发表成功");
   commentContent.value = "";
-  commentStore.getComment(route.params.id);
+  articleStore.getArticleComment(route.params.id);
 };
 
 // 记录所有回复区域的显示和隐藏状态

@@ -13,3 +13,4 @@ export * from "./modules/momentStore";
 export * from "./modules/detailStore";
 export * from "./modules/commentStore";
 export * from "./modules/questionStore";
+export * from "./modules/articleStore";

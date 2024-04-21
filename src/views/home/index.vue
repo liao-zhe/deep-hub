@@ -3,17 +3,19 @@ import { ref } from "vue";
 import "@arco-design/web-vue/es/message/style/css.js";
 // import { Message } from '@arco-design/web-vue'
 import sidebarView from "../../components/slidebar/sidebar-view.vue";
-import contentView from "./components/content-view.vue";
+import articleList from "./components/article-list.vue";
 import userlistView from "../../components/userlist/userlist-view.vue";
-import { useHomeStore } from "@/stores";
+import { useHomeStore, useArticleStore } from "@/stores";
 import { storeToRefs } from "pinia";
 const homeStore = useHomeStore();
+const articleStore = useArticleStore();
 homeStore.getUserList(1, 10);
-const { moments } = storeToRefs(homeStore);
+const { articles } = storeToRefs(articleStore);
+console.log(articles.value);
 // 控制loading的显示和隐藏
 const isShowLoading = ref(true);
-const loadMomentHandler = async payload => {
-  const res = await homeStore.getMomentList(payload.count, 10, 8);
+const loadArticleHandler = async payload => {
+  const res = await articleStore.getArticleList({ pagenum: articleStore.pagenum++, pagesize: payload.pagesize });
   // 当res为false表示所有数据都查询出来了，此时要关闭观察器，并隐藏loading
   console.log(res);
   if (res === false) {
@@ -27,7 +29,7 @@ const loadMomentHandler = async payload => {
   <div class="home">
     <div class="home-container">
       <sidebar-view />
-      <content-view :moments="moments" :is-show-loading="isShowLoading" @load-moment="loadMomentHandler" />
+      <article-list :articles="articles" :is-show-loading="isShowLoading" @load-article="loadArticleHandler" />
       <userlist-view :users="homeStore.users" />
     </div>
   </div>

@@ -84,6 +84,7 @@ onMounted(() => {
           <span style="font-size: 12px; color: #777777">{{ item.createAt }}</span>
         </div>
       </template>
+      <a-divider />
     </a-comment>
     <div class="loading" ref="loadingRef" v-if="isShowLoading">
       <a-spin dot />

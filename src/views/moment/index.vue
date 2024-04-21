@@ -24,8 +24,8 @@ const loadMomentHandler = async payload => {
 </script>
 
 <template>
-  <div class="home">
-    <div class="home-container">
+  <div class="moment">
+    <div class="moment-container">
       <slidebar-view />
       <momen-list :moments="moments" :is-show-loading="isShowLoading" @load-moment="loadMomentHandler"></momen-list>
       <userlist-view :users="homeStore.users" />
@@ -34,14 +34,14 @@ const loadMomentHandler = async payload => {
 </template>
 
 <style lang="scss" scoped>
-.home {
-  background-color: var(--theme-bg2);
+.moment {
   min-height: calc(100vh - 58px);
-  .home-container {
+  background-color: var(--theme-bg2);
+  .moment-container {
+    display: flex;
     max-width: 1200px;
     padding: 20px 0;
     margin: 0 auto;
-    display: flex;
   }
 }
 </style>

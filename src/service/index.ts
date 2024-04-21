@@ -5,3 +5,4 @@ export * from "./modules/detailService";
 export * from "./modules/commentService";
 export * from "./modules/momentService";
 export * from "./modules/questionService";
+export * from "./modules/articleService";

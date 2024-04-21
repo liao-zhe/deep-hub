@@ -67,6 +67,15 @@ const router = createRouter({
       }
     },
     {
+      path: "/articleDetail/:id",
+      name: "articleDetail",
+      component: () => import("@/views/home/components/article-detail.vue"),
+      meta: {
+        title: "文章详情",
+        isNavbar: true
+      }
+    },
+    {
       path: "/user/:username",
       name: "user",
       component: () => import("@/views/user/index.vue"),
