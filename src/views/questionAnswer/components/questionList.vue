@@ -1,14 +1,8 @@
 <script setup>
 import { ref, onMounted, defineEmits } from "vue";
-import { IconHeart, IconMessage, IconHeartFill } from "@arco-design/web-vue/es/icon";
 import { useUserStore, useQuestionStore } from "@/stores";
 const userStore = useUserStore();
 const questionStore = useQuestionStore();
-const likes = ref({});
-const onLikeChange = id => {
-  if (!likes.value[id]) return (likes.value[id] = true);
-  likes.value[id] = !likes.value[id];
-};
 defineProps({
   questions: {
     type: Object,
@@ -57,16 +51,6 @@ const edit = () => {
             </a-button>
           </router-link>
         </span>
-        <span class="action" key="heart" @click="onLikeChange(item.id)">
-          <span v-if="likes[item.id]">
-            <IconHeartFill :style="{ color: '#f53f3f' }" />
-          </span>
-          <span v-else>
-            <IconHeart />
-          </span>
-          {{ item.likes }}
-        </span>
-        <span class="action" key="reply"> <IconMessage /> {{ item.commentCount }} </span>
       </template>
       <template #avatar> </template>
       <template #content>
