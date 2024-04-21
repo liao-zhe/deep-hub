@@ -4,7 +4,7 @@ import { ref, defineEmits, onMounted, watch } from "vue";
 import { useUserStore, useArticleStore } from "@/stores";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-const emits = defineEmits(["createMoment", "removeMoment", "loadMoment"]);
+const emits = defineEmits(["createMoment", "removeMoment", "loadMoment", "loadArticle"]);
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
@@ -28,28 +28,34 @@ defineProps({
 
 const username = userStore.userInfo.username;
 const token = userStore.token;
-let currentPage = 0;
-const pageSize = 10;
-// 拿到动态列表
-function loadMomentFn(obj) {
-  emits("loadMoment", obj);
-}
-function loadArticlFn(obj) {
-  emits("loadArticle", obj);
-}
-const loadingRef = ref();
-onMounted(() => {
-  const observer = new IntersectionObserver(
-    entries => {
-      if (entries[0].isIntersecting) {
-        currentPage++;
-        loadMomentFn({ pagenum: currentPage, pagesize: pageSize, username: route.query.username, observer });
-      }
-    },
-    { threshold: 1 }
-  );
-  observer.observe(loadingRef.value);
-});
+// let currentPage = 1;
+// const pageSize = 15;
+// // 拿到动态列表
+// function loadMomentFn(obj) {
+//   emits("loadMoment", obj);
+// }
+// function loadArticleFn(obj) {
+//   emits("loadArticle", obj);
+// }
+// const loadingRef = ref();
+// const observeScrollLoading = loadFn => {
+//   const observer = new IntersectionObserver(
+//     entries => {
+//       if (entries[0].isIntersecting) {
+//         currentPage++;
+//         loadFn({ pagenum: currentPage, pagesize: pageSize, username: route.query.username, observer });
+//       }
+//     },
+//     { threshold: 1 }
+//   );
+//   observer.observe(loadingRef.value);
+// };
+// onMounted(() => {
+//   // 滚动加载动态内容
+//   observeScrollLoading(loadMomentFn);
+//   // 滚动加载文章内容
+//   observeScrollLoading(loadArticleFn);
+// });
 // 进入动态详情
 const momentDetail = id => {
   router.push(`/detail/${id}`);
@@ -262,13 +268,13 @@ const onProgress = currentFile => {
             你确定要删除此动态吗？删除后不可恢复！
           </div>
         </a-modal>
-        <div class="loading" ref="loadingRef" v-if="isShowLoading">
+        <!-- <div class="loading" v-if="isShowLoading">
           <a-spin dot />
         </div>
         <h3 v-else style="color: var(--color-text-3); text-align: center">
           <icon-info-circle />
           已经加载到底部了
-        </h3>
+        </h3> -->
       </a-tab-pane>
       <a-tab-pane key="2" title="文章">
         <a-drawer
@@ -383,13 +389,13 @@ const onProgress = currentFile => {
             你确定要删除此动态吗？删除后不可恢复！
           </div>
         </a-modal>
-        <div class="loading" ref="loadingRef" v-if="isShowLoading">
+        <!-- <div class="loading" v-if="true">
           <a-spin dot />
         </div>
         <h3 v-else style="color: var(--color-text-3); text-align: center">
           <icon-info-circle />
           已经加载到底部了
-        </h3>
+        </h3> -->
       </a-tab-pane>
       <a-tab-pane key="3" title="收藏"> Content of Tab Panel 3 </a-tab-pane>
       <a-tab-pane key="4" title="关注"> Content of Tab Panel 4 </a-tab-pane>

@@ -23,34 +23,44 @@ const { articles } = storeToRefs(articleStore);
 const isShowLoading = ref(true);
 userStore.getUserInfo(route.query.id);
 const { token, userInfo, otherUserInfo } = storeToRefs(userStore);
+console.log();
 // 获取动态列表
-const loadMomentHandler = async payload => {
-  const res = await momentStore.getMomentList({
-    pagenum: payload.pagenum,
-    pagesize: payload.pagesize,
-    username: payload.username
-  });
-  if (res === false) {
-    // 当没有更多数据可加载时，停止下拉加载
-    payload.observer.disconnect();
-    isShowLoading.value = false;
-  }
-};
+// const loadMomentHandler = async payload => {
+//   const res = await momentStore.getMomentList({
+//     pagenum: payload.pagenum,
+//     pagesize: payload.pagesize,
+//     username: payload.username
+//   });
+//   if (res === false) {
+//     // 当没有更多数据可加载时，停止下拉加载
+//     payload.observer.disconnect();
+//     isShowLoading.value = false;
+//   }
+// };
 
-// 获取文章列表
-const loadArticleHandler = async payload => {
-  const res = await articleStore.getArticleList({
-    pagenum: payload.pagenum,
-    pagesize: payload.pagesize,
-    username: payload.username
-  });
-  if (res === false) {
-    // 当没有更多数据可加载时，停止下拉加载
-    payload.observer.disconnect();
-    isShowLoading.value = false;
-  }
-};
-
+// // 获取文章列表
+// const loadArticleHandler = async payload => {
+//   const res = await articleStore.getArticleList({
+//     pagenum: payload.pagenum,
+//     pagesize: payload.pagesize,
+//     username: payload.username
+//   });
+//   if (res === false) {
+//     // 当没有更多数据可加载时，停止下拉加载
+//     payload.observer.disconnect();
+//     isShowLoading.value = false;
+//   }
+// };
+momentStore.getMomentList({
+  pagenum: 1,
+  pagesize: 40,
+  username: userStore.userInfo.username
+});
+articleStore.getArticleList({
+  pagenum: 1,
+  pagesize: 40,
+  username: userStore.userInfo.username
+});
 // 创建动态
 const createMomentHandler = async payload => {
   const res = await momentStore.createMoment(payload);

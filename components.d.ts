@@ -24,6 +24,7 @@ declare module 'vue' {
     AIcon: typeof import('@arco-design/web-vue')['Icon']
     AInput: typeof import('@arco-design/web-vue')['Input']
     AInputPassword: typeof import('@arco-design/web-vue')['InputPassword']
+    AInputSearch: typeof import('@arco-design/web-vue')['InputSearch']
     AInputTag: typeof import('@arco-design/web-vue')['InputTag']
     AList: typeof import('@arco-design/web-vue')['List']
     AListItem: typeof import('@arco-design/web-vue')['ListItem']
