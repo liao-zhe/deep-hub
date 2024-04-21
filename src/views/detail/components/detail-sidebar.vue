@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .detail-sidebar {
   width: 25%;
   height: 40vh;
