@@ -19,6 +19,7 @@ interface momentInterface {
   isEdit: boolean;
   answerList: any[];
   answerTotalCount: number;
+  newQuestionInfo: any;
 }
 
 export const useQuestionStore = defineStore("question", {
@@ -31,14 +32,21 @@ export const useQuestionStore = defineStore("question", {
       currentQuestion: "",
       isEdit: false,
       answerList: [],
-      answerTotalCount: 0
+      answerTotalCount: 0,
+      newQuestionInfo: ""
     };
   },
   actions: {
     // 创建问题
     async createQuestion(data: { content: string; userId: number }) {
       const res = await fetchCreateQuestion(data);
-      if (res.code !== 200) return res.success;
+      if (res.code === 200) {
+        res.data.createTime = dayjs(res.data.createTime).format("YYYY-MM-DD HH:mm");
+        this.newQuestionInfo = res.data;
+        console.log(this.newQuestionInfo);
+      } else {
+        return false;
+      }
     },
     // 创建答案
     async createAnswer(id: number, data: { content: string; questionId: number; userId: number }) {
@@ -118,9 +126,7 @@ export const useQuestionStore = defineStore("question", {
     // 查询一个问题
     async getOneQuestion(id: string) {
       const { data } = await fetchOneQuestion(id);
-
       data.createTime = dayjs(data.createTime).format("YYYY-MM-DD HH:mm");
-
       if (data) {
         this.currentQuestion = data;
         console.log(this.currentQuestion);
