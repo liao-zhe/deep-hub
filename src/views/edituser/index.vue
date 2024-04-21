@@ -7,7 +7,6 @@ import { Modal } from "@arco-design/web-vue";
 import { Message } from "@arco-design/web-vue";
 // 子组件
 // arcoDesign
-import { Message } from "@arco-design/web-vue";
 // store
 import { useUserStore } from "@/stores";
 const router = useRouter();
@@ -50,9 +49,9 @@ const handleSubmit = async () => {
   Message.success("个人信息修改成功");
   router.push(`/user/${userInfo.nickname}/?id=${userInfo.id}&username=${userInfo.username}`);
   deleteFormData();
-  setTimeout(() => {
-    router.go(0);
-  }, 0);
+  // setTimeout(() => {
+  //   router.go(0);
+  // }, 0);
 };
 
 const onChangeBirthday = value => {
@@ -114,7 +113,7 @@ const customRequest = option => {
                   </div>
                 </template>
               </a-upload>
-              <div style="color: var(--color-text-3); font-size: 12px">
+              <div style="font-size: 12px; color: var(--color-text-3)">
                 支持头像格式 jpeg、jpg、png
                 <br />
                 大小不超过1mb
@@ -176,16 +175,16 @@ const customRequest = option => {
 
 <style lang="scss" scoped>
 .edit-user {
-  background-color: var(--theme-bg2);
   min-height: calc(100vh - 58px);
+  background-color: var(--theme-bg2);
   .edit-user-container {
     max-width: 1200px;
     padding: 20px 0;
     margin: 0 auto;
     .edit-user-content {
-      background-color: #fff;
       min-height: calc(100vh - 138px);
       padding: 20px 0;
+      background-color: #ffffff;
     }
   }
 }

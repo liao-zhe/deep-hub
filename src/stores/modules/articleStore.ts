@@ -69,6 +69,7 @@ export const useArticleStore = defineStore("article", {
     async createArticle(formData: any) {
       const res = await fetchCreateArticle(formData);
       if (res.code !== 200) return res.success;
+      return res;
     },
     // 创建动态(视频)
     async createArticleVideo(formData: any) {

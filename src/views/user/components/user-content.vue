@@ -1,7 +1,9 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router";
-import { ref, defineEmits, onMounted, watch } from "vue";
+import { ref, defineEmits } from "vue";
 import { useUserStore, useArticleStore } from "@/stores";
+import { Message } from "@arco-design/web-vue";
+
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 const emits = defineEmits(["createMoment", "removeMoment", "loadMoment", "loadArticle"]);
@@ -57,8 +59,8 @@ const token = userStore.token;
 //   observeScrollLoading(loadArticleFn);
 // });
 // 进入动态详情
-const momentDetail = id => {
-  router.push(`/detail/${id}`);
+const articleDetail = () => {
+  // router.push(`/articleDetail/${id}`);
 };
 
 const momentContent = ref("");
@@ -112,6 +114,10 @@ const removeMoment = id => {
   deleteVisible.value = true;
   curId.value = id;
 };
+const removeArticle = id => {
+  deleteVisible.value = true;
+  curId.value = id;
+};
 // 删除动态
 const deleteHandleOk = () => {
   emits("removeMoment", curId.value);
@@ -157,26 +163,30 @@ const handlerClose = () => {
   drawer.value = false;
 };
 // 文章回调
-const handleArticleOk = () => {
+const handleArticleOk = async () => {
   console.log(formModel.value);
   const formData = new FormData();
   for (const key in formModel.value) {
     formData.append(key, formModel.value[key]);
   }
-  articleStore.createArticle(formData).then(res => {
-    if (res) {
-      Message.success("发布成功！");
-      formModel.value = {
-        title: "",
-        content: "",
-        cover: "",
-        labels: ""
-      };
-    } else {
-      Message.error("发布失败！");
-    }
-  });
+  const res = await articleStore.createArticle(formData);
+  if (res) {
+    Message.success("发布成功！");
+    formModel.value = {
+      title: "",
+      content: "",
+      cover: "",
+      labels: ""
+    };
+  } else {
+    Message.error("发布失败！");
+  }
   drawervisible.value = false;
+  articleStore.getArticleList({
+    pagenum: 1,
+    pagesize: 40,
+    username: userStore.userInfo.username
+  });
 };
 const handleArticleCancel = () => {
   drawervisible.value = false;
@@ -256,7 +266,7 @@ const onProgress = currentFile => {
             </span>
           </template>
           <template #content>
-            <div @click="momentDetail(item.id)" class="moment-content">
+            <div @click="articleDetail(item.id)" class="moment-content">
               {{ item.content }}
             </div>
           </template>
@@ -357,7 +367,9 @@ const onProgress = currentFile => {
         </a-drawer>
         <!-- 发布文章对话框 -->
         <!-- <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel" ok-text="发布"> </a-modal> -->
-        <a-button type="primary" @click="handleClick('文章')">发布文章+</a-button>
+        <div style="text-align: right">
+          <a-button type="primary" @click="handleClick('文章')">发布文章+</a-button>
+        </div>
         <a-comment
           v-for="item in articles"
           :author="item.user.nickname"
@@ -372,14 +384,12 @@ const onProgress = currentFile => {
               {{ item.likes }}
             </span>
             <span class="action" key="reply"> <IconMessage /> {{ item.commentCount }} </span>
-            <span class="delete" @click="removeMoment(item.id)" v-if="$route.query.username === username && token">
+            <span class="delete" @click="removeArticle(item.id)" v-if="$route.query.username === username && token">
               <icon-delete /> 删除
             </span>
           </template>
           <template #content>
-            <div @click="momentDetail(item.id)" class="moment-content">
-              {{ item.content }}
-            </div>
+            <div @click="momentDetail(item.id)" class="moment-content" v-html="item.content"></div>
           </template>
         </a-comment>
         <!-- 删除对话框 -->
@@ -397,17 +407,15 @@ const onProgress = currentFile => {
           已经加载到底部了
         </h3> -->
       </a-tab-pane>
-      <a-tab-pane key="3" title="收藏"> Content of Tab Panel 3 </a-tab-pane>
-      <a-tab-pane key="4" title="关注"> Content of Tab Panel 4 </a-tab-pane>
     </a-tabs>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .user-content {
-  background-color: var(--color-bg-1);
-  margin: 20px 0;
   padding: 20px;
+  margin: 20px 0;
+  background-color: var(--color-bg-1);
   .moment-content {
     cursor: pointer;
   }
