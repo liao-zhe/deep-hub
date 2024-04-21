@@ -33,7 +33,7 @@ onMounted(() => {
 
 <template>
   <div class="content">
-    <div v-for="item in articles" :datetime="item.createAt" :key="item.id" class="content-item">
+    <div v-for="item in articles" :datetime="item.createTime" :key="item.id" class="content-item">
       <div class="" style="display: flex; justify-content: space-between">
         <div style="cursor: pointer">
           <router-link :to="`/articleDetail/${item.id}`">

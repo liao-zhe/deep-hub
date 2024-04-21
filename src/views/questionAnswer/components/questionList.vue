@@ -96,7 +96,7 @@ const edit = () => {
               <img class="content-img" v-for="(image, index) in item.images" :key="index" :src="image" alt="" />
             </router-link>
           </div>
-          <span style="font-size: 12px; color: #777777">{{ item.createAt }}</span>
+          <span style="font-size: 12px; color: #777777">{{ item.createTime }}</span>
         </div>
       </template>
     </a-comment>

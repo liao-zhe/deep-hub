@@ -27,7 +27,7 @@ export const useMomentStore = defineStore("moment", {
         data.list.forEach(item => {
           formattedList.push({
             ...item,
-            createAt: dayjs(item.createAt).format("YYYY-MM-DD HH:mm")
+            createTime: dayjs(item.createTime).format("YYYY-MM-DD HH:mm")
           });
         });
 
