@@ -33,10 +33,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="content">
+  <div class="content-list">
     <div v-for="item in articles" :datetime="item.createTime" :key="item.id" class="content-item">
       <div class="" style="display: flex; justify-content: space-between">
-        <div style="width: 100%; cursor: pointer">
+        <div style="width: 80%; cursor: pointer">
           <router-link :to="`/articleDetail/${item.id}`">
             <div style="font-size: 20px; font-weight: 800">{{ item.title }}</div>
             <div v-html="item.content" class="content" style="box-sizing: border-box; width: 100%; font-size: 16px"></div>
@@ -79,7 +79,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.content {
+.content-list {
   width: 60%;
   padding: 20px;
   margin: 0 15px;
@@ -87,6 +87,8 @@ onMounted(() => {
   .content-item {
     margin: 10px 0;
     .content {
+      width: fit-content;
+      margin: 10px 0;
       overflow: hidden;
       color: #8a919f;
       text-align: left;
