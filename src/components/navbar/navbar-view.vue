@@ -1,13 +1,15 @@
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useUserStore, useMomentStore, useQuestionStore } from "@/stores";
 import { storeToRefs } from "pinia";
+import { Message } from "@arco-design/web-vue";
 const userStore = useUserStore();
 const momentStore = useMomentStore();
 const questionStore = useQuestionStore();
 const { verifyLogin } = storeToRefs(userStore);
 const router = useRouter();
+const route = useRoute();
 // 检查是否登录
 if (userStore.token) {
   verifyLogin.value = true;
@@ -66,6 +68,32 @@ const searchArticle = value => {
     location.reload();
   }, 0);
 };
+
+const content = ref();
+const modalVisible = ref(false);
+const createQuestion = () => {
+  modalVisible.value = true;
+};
+const handleModalOk = async () => {
+  await questionStore
+    .createQuestion({ content: content.value, userId: userStore.userInfo.id })
+    .then(res => {
+      Message.success("创建成功");
+      router.push(`/questiondetail/${questionStore.newQuestionInfo.id}`);
+      content.value = "";
+      modalVisible.value = false;
+    })
+    .catch(error => {
+      Message.error("创建失败");
+      content.value = "";
+      modalVisible.value = false;
+      console.log(error);
+    });
+};
+const handleModalCancel = () => {
+  content.value = "";
+  modalVisible.value = false;
+};
 </script>
 
 <template>
@@ -98,6 +126,19 @@ const searchArticle = value => {
           @search="searchArticle"
         />
       </a-col>
+      <a-button type="primary" shape="round" @click="createQuestion">提问</a-button>
+      <a-modal v-model:visible="modalVisible" @ok="handleModalOk" @cancel="handleModalCancel">
+        <template #title> 提问 </template>
+        <a-textarea
+          v-model="content"
+          placeholder="写下你的问题，准确地描述问题更容易得到解答"
+          :auto-size="{
+            minRows: 2,
+            maxRows: 5
+          }"
+          style="margin-top: 20px"
+        />
+      </a-modal>
       <a-col :flex="2" class="right">
         <icon-notification class="notify" />
         <a-popover v-if="verifyLogin">
@@ -161,5 +202,9 @@ const searchArticle = value => {
       cursor: pointer;
     }
   }
+}
+.arco-textarea-wrapper {
+  border: none;
+  background-color: white;
 }
 </style>
