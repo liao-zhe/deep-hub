@@ -16,6 +16,10 @@ defineProps({
     type: Array,
     default: () => []
   },
+  articles: {
+    type: Array,
+    default: () => []
+  },
   isShowLoading: {
     type: Boolean,
     default: true
@@ -30,7 +34,9 @@ const pageSize = 10;
 function loadMomentFn(obj) {
   emits("loadMoment", obj);
 }
-
+function loadArticlFn(obj) {
+  emits("loadArticle", obj);
+}
 const loadingRef = ref();
 onMounted(() => {
   const observer = new IntersectionObserver(
@@ -347,7 +353,7 @@ const onProgress = currentFile => {
         <!-- <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel" ok-text="发布"> </a-modal> -->
         <a-button type="primary" @click="handleClick('文章')">发布文章+</a-button>
         <a-comment
-          v-for="item in moments"
+          v-for="item in articles"
           :author="item.user.nickname"
           :datetime="item.createTime"
           :key="item.id"

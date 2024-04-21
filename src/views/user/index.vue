@@ -6,7 +6,7 @@
 import { ref } from "vue";
 import userCard from "./components/user-card.vue";
 import userContent from "./components/user-content.vue";
-import { useUserStore, useMomentStore } from "@/stores";
+import { useUserStore, useMomentStore, useArticleStore } from "@/stores";
 // 当前路由
 import { useRoute } from "vue-router";
 const route = useRoute();
@@ -17,13 +17,29 @@ import { Message } from "@arco-design/web-vue";
 
 const userStore = useUserStore();
 const momentStore = useMomentStore();
+const articleStore = useArticleStore();
 const { moments } = storeToRefs(momentStore);
+const { articles } = storeToRefs(articleStore);
 const isShowLoading = ref(true);
 userStore.getUserInfo(route.query.id);
 const { token, userInfo, otherUserInfo } = storeToRefs(userStore);
 // 获取动态列表
 const loadMomentHandler = async payload => {
   const res = await momentStore.getMomentList({
+    pagenum: payload.pagenum,
+    pagesize: payload.pagesize,
+    username: payload.username
+  });
+  if (res === false) {
+    // 当没有更多数据可加载时，停止下拉加载
+    payload.observer.disconnect();
+    isShowLoading.value = false;
+  }
+};
+
+// 获取文章列表
+const loadArticleHandler = async payload => {
+  const res = await articleStore.getArticleList({
     pagenum: payload.pagenum,
     pagesize: payload.pagesize,
     username: payload.username
@@ -71,11 +87,13 @@ const removeMomentHandler = async id => {
     <div class="user-container">
       <user-card v-if="otherUserInfo" :current-user="otherUserInfo" :token="token" :user-info="userInfo"></user-card>
       <user-content
-        v-if="moments"
+        v-if="moments || articles"
         :moments="moments"
+        :articles="articles"
         @create-moment="createMomentHandler"
         @remove-moment="removeMomentHandler"
         @load-moment="loadMomentHandler"
+        @load-article="loadArticleHandler"
         :is-show-loading="isShowLoading"
       ></user-content>
     </div>
