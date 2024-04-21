@@ -63,7 +63,7 @@ const onChangeClick = () => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .moment-content {
   padding: 30px;
   margin-bottom: 10px;
