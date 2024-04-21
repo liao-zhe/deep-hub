@@ -1,11 +1,6 @@
 <script setup>
 import { ref, onMounted, defineEmits } from "vue";
-import { IconHeart, IconMessage, IconHeartFill } from "@arco-design/web-vue/es/icon";
-const likes = ref({});
-const onLikeChange = id => {
-  if (!likes.value[id]) return (likes.value[id] = true);
-  likes.value[id] = !likes.value[id];
-};
+
 defineProps({
   articles: {
     type: Object,
@@ -38,16 +33,23 @@ onMounted(() => {
 
 <template>
   <div class="content">
-    <div style="margin: 10px 0" v-for="item in articles" :datetime="item.createAt" :key="item.id" class="content-item">
-      <div style="display: flex; justify-content: space-between">
-        <div>
-          <div style="font-size: 22px; font-weight: 800">{{ item.title }}</div>
-          <div class="content">
-            {{ item.content }}
-          </div>
-
+    <div v-for="item in articles" :datetime="item.createAt" :key="item.id" class="content-item">
+      <div class="" style="display: flex; justify-content: space-between">
+        <div style="cursor: pointer">
+          <router-link :to="`/articleDetail/${item.id}`">
+            <div style="font-size: 20px; font-weight: 800">{{ item.title }}</div>
+            <div class="content" style="font-size: 16px">
+              {{ item.content }}
+            </div>
+          </router-link>
           <div style="font-size: 12px; color: #8a919f">
-            <span>{{ item.user.nickname }}</span>
+            <router-link
+              class="user-nickname"
+              target="_blank"
+              :to="`/user/${item.user.nickname}/?id=${item.user.id}&username=${item.user.username}`"
+            >
+              {{ item.user.nickname }}
+            </router-link>
             <span style="padding: 0 5px; color: #e1e1e1">|</span>
             <span><icon-eye /> {{ item.viewCount }} </span>
           </div>
@@ -80,7 +82,7 @@ onMounted(() => {
   margin: 0 15px;
   background-color: var(--theme-bg1);
   .content-item {
-    cursor: pointer;
+    margin: 10px 0;
     .content {
       margin: 10px 0;
       overflow: hidden;
@@ -93,20 +95,7 @@ onMounted(() => {
   .loading {
     text-align: center;
   }
-}
-.action {
-  display: inline-block;
-  padding: 0 4px;
-  line-height: 24px;
-  color: var(--color-text-1);
-  cursor: pointer;
-  background: transparent;
-  border-radius: 2px;
-  transition: all 0.1s ease;
-  &:hover {
-    background: var(--color-fill-3);
-  }
-  .article-content:hover a {
+  .user-nickname:hover {
     color: rgb(var(--primary-6));
   }
 }

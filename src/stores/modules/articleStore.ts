@@ -1,5 +1,15 @@
 import { defineStore } from "pinia";
-import { fetchArticleList, fetchCreateArticle, fetchRemoveArticle } from "@/service";
+import {
+  fetchArticleList,
+  fetchCreateArticle,
+  fetchRemoveArticle,
+  fetchArticleDetail,
+  fetchArticleComment,
+  fetchSendArticleComment,
+  fetchRemoveArticleComment,
+  fetchLikeArticleComment
+} from "@/service";
+import listToTree from "../../utils/listToTree";
 import dayjs from "dayjs";
 
 interface articleInterface {
@@ -7,6 +17,9 @@ interface articleInterface {
   articleOffset: number;
   articleTotalCount: number;
   pagenum: number;
+  articleDetail: any;
+  commentsTree: any;
+  commentTotal: any;
 }
 
 export const useArticleStore = defineStore("article", {
@@ -15,7 +28,10 @@ export const useArticleStore = defineStore("article", {
       articles: [],
       articleOffset: 0,
       articleTotalCount: 0,
-      pagenum: 1
+      pagenum: 1,
+      articleDetail: null,
+      commentsTree: "",
+      commentTotal: 0
     };
   },
   actions: {
@@ -64,6 +80,39 @@ export const useArticleStore = defineStore("article", {
       const res = await fetchRemoveArticle(id);
       console.log(res);
       if (res.code !== 200) return res.success;
+    },
+    // 获取文章
+    async getOneArticle(id: number) {
+      const { data } = await fetchArticleDetail(id);
+      data.createTime = dayjs(data.createTime).format("YYYY-MM-DD HH:mm");
+      this.articleDetail = data;
+    },
+    // 获取评论
+    async getArticleComment(id: number) {
+      const { data } = await fetchArticleComment(id);
+      for (const item of data.data) {
+        item.createTime = dayjs(item.createTime).format("YYYY-MM-DD HH:mm");
+        item.content = item.content.replace(/\n/g, "<br>");
+      }
+      this.commentsTree = listToTree(data.data);
+      console.log(this.commentsTree);
+
+      this.commentTotal = data.total;
+    },
+    // 创建评论
+    async createArticleComment(momentId: number, content: string, replyId: string | null = null) {
+      const result = await fetchSendArticleComment(Number(momentId), content, replyId);
+      if (result.code !== 200) return result.success;
+    },
+    // 删除评论
+    async removeArticleComment(id: string) {
+      const result = await fetchRemoveArticleComment(id);
+      if (result.code !== 200) return result.success;
+    },
+    // 点赞
+    async likeArticleComment(id: number) {
+      const result = await fetchLikeArticleComment(id);
+      if (result.code !== 200) return result.success;
     }
   }
 });

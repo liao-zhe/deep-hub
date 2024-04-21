@@ -49,3 +49,39 @@ export function fetchLikeArticle(id: number) {
     url: `/article/toggle-likes/${id}`
   });
 }
+
+// 获取某个文章的所有评论
+export function fetchArticleComment(id: number) {
+  return cmsService.request({
+    method: "get",
+    url: `/article-comment/${id}`
+  });
+}
+
+// 创建评论
+export function fetchSendArticleComment(articleId: number, content: string, replyId: string | null = null) {
+  return cmsService.request({
+    method: "post",
+    url: `/article-comment/create`,
+    data: {
+      articleId,
+      content,
+      replyId
+    }
+  });
+}
+//删除评论
+export function fetchRemoveArticleComment(id: string) {
+  return cmsService.request({
+    method: "delete",
+    url: `/article-comment/delete/${id}`
+  });
+}
+
+// 切换点赞
+export function fetchLikeArticleComment(id: string) {
+  return cmsService.request({
+    method: "post",
+    url: `/article-comment/toggle-likes/${id}`
+  });
+}

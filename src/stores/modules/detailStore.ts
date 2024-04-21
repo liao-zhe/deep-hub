@@ -3,13 +3,11 @@ import { fetchMomentDetail } from "@/service";
 import dayjs from "dayjs";
 
 interface detailState {
-  momentDetail: any;
+  momentDetail?: any;
 }
 
 export const useDetailStore = defineStore("detail", {
-  state: (): detailState => {
-    return { momentDetail: "" };
-  },
+  state: (): detailState => ({ momentDetail: "" }),
   actions: {
     // 获取动态
     async getOneMoment(id: number) {
