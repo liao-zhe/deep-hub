@@ -94,8 +94,8 @@ const router = createRouter({
       }
     },
     {
-      path: "/questiondetail/:id",
-      name: "questiondetail",
+      path: "/questionDetail/:id",
+      name: "questionDetail",
       component: () => import("@/views/questionDetail/index.vue"),
       meta: {
         title: "问答详情",

@@ -75,7 +75,7 @@ export function fetchAnswerList(
   }
 ) {
   return cmsService.request({
-    url: "/question-answer/answer/${id}",
+    url: `/question-answer/answer/${id}`,
     method: "get",
     params
   });

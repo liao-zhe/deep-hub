@@ -1,11 +1,11 @@
 <script setup>
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore, useQuestionStore } from "@/stores";
 const userStore = useUserStore();
 const questionStore = useQuestionStore();
 const router = useRouter();
-const props = defineProps({
+defineProps({
   questionDetail: {
     type: Object,
     default: () => ({})
@@ -13,12 +13,9 @@ const props = defineProps({
 });
 
 // 跳转至用户详情页
-const toUserHandler = () => {
-  router
-    .push
-    // `/user/${props.momentDetail.user.nickname}/?id=${props.momentDetail.userId}&username=${props.momentDetail.user.username}`
-    ();
-};
+// const toUserHandler = () => {
+//   router.push();
+// };
 const buttonType = computed(() => {
   return questionStore.isEdit ? "outline" : "primary";
 });

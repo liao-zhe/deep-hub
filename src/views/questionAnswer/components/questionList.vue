@@ -42,7 +42,7 @@ const edit = () => {
       <template #actions>
         <a-tag v-for="(tag, i) in item.labels" :key="i">{{ tag }}</a-tag>
         <span class="answer">
-          <router-link :to="`/questiondetail/${item.id}`">
+          <router-link :to="`/questionDetail/${item.id}`">
             <a-button type="primary" size="small" @click="edit()">
               <template #icon>
                 <icon-edit />
@@ -71,7 +71,7 @@ const edit = () => {
             </div>
           </router-link>
           <div>
-            <router-link :to="`/questiondetail/${item.id}`" target="_blank">
+            <router-link :to="`/questionDetail/${item.id}`" target="_blank">
               {{ item.content }}
             </router-link>
           </div>

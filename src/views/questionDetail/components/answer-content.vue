@@ -26,6 +26,7 @@ const emits = defineEmits(["loadAnswer"]);
 function loadAnswerFn(obj) {
   emits("loadAnswer", obj);
 }
+
 const loadingRef = ref();
 onMounted(() => {
   const observer = new IntersectionObserver(

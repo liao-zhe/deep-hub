@@ -18,7 +18,7 @@ const content = ref();
 
 const isShowLoading = ref(true);
 const loadAnswerHandler = async payload => {
-  const res = await questionStore.getAnswerList(currentQuestion.id, {
+  const res = await questionStore.getAnswerList(route.params.id, {
     pagenum: questionStore.pagenum++,
     pagesize: 15
   });
@@ -34,9 +34,9 @@ const loadAnswerHandler = async payload => {
 const sendAnswer = async () => {
   const textOnlyContent = content.value.replace(/<[^>]+>/g, "");
   await questionStore
-    .createAnswer(currentQuestion.value.id, {
+    .createAnswer(route.params.id, {
       content: textOnlyContent,
-      questionId: currentQuestion.value.id,
+      questionId: route.params.id,
       userId: currentQuestion.value.userId
     })
     .then(() => {
@@ -48,7 +48,7 @@ const sendAnswer = async () => {
     });
   questionStore.isEdit = false;
   content.value = "";
-  await questionStore.getAnswerList(currentQuestion.id, {
+  await questionStore.getAnswerList(route.params.id, {
     pagenum: 1,
     pagesize: 15
   });

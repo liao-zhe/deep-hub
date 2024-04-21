@@ -79,7 +79,7 @@ const handleModalOk = async () => {
     .createQuestion({ content: content.value, userId: userStore.userInfo.id })
     .then(res => {
       Message.success("创建成功");
-      router.push(`/questiondetail/${questionStore.newQuestionInfo.id}`);
+      router.push(`/questionDetail/${questionStore.newQuestionInfo.id}`);
       content.value = "";
       modalVisible.value = false;
     })
@@ -204,7 +204,7 @@ const handleModalCancel = () => {
   }
 }
 .arco-textarea-wrapper {
-  border: none;
   background-color: white;
+  border: none;
 }
 </style>

@@ -51,7 +51,7 @@ const onChangeClick = () => {
             </div>
             <template #content>
               <div>
-                {{ articleDetail?.content }}
+                <div v-html="articleDetail?.content"></div>
                 <div>
                   <img
                     v-for="(image, index) in articleDetail?.images"
