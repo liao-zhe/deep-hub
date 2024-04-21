@@ -163,7 +163,7 @@ const beforeUpload = file => {
         <a-comment
           v-for="item in moments"
           :author="item.user.nickname"
-          :datetime="item.createAt"
+          :datetime="item.createTime"
           :key="item.id"
           class="content-item"
           align="right"

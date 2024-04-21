@@ -44,12 +44,12 @@ const toHome = () => {
 // 进入动态界面
 const toMoment = () => {
   router.push("/moment");
-  momentStore.getMomentList({ pagenum: 1, pagesize: 15 });
+  // momentStore.getMomentList({ pagenum: 1, pagesize: 15 });
 };
 
 const toQuestionAnswer = () => {
   router.push("/questionAnswer");
-  questionStore.getQuestionList({ pagenum: 1, pagesize: 15 });
+  // questionStore.getQuestionList({ pagenum: 1, pagesize: 15 });
 };
 </script>
 
