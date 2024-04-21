@@ -1,10 +1,11 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useUserStore, useMomentStore } from "@/stores";
+import { useUserStore, useMomentStore, useQuestionStore } from "@/stores";
 import { storeToRefs } from "pinia";
 const userStore = useUserStore();
 const momentStore = useMomentStore();
+const questionStore = useQuestionStore();
 const { verifyLogin } = storeToRefs(userStore);
 const router = useRouter();
 // 检查是否登录
@@ -48,6 +49,7 @@ const toMoment = () => {
 
 const toQuestionAnswer = () => {
   router.push("/questionAnswer");
+  questionStore.getQuestionList({ pagenum: 1, pagesize: 15 });
 };
 </script>
 
