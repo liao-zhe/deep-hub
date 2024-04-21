@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { IconEdit } from "@arco-design/web-vue/es/icon";
 import { Modal } from "@arco-design/web-vue";
+import { Message } from "@arco-design/web-vue";
 // 子组件
 // arcoDesign
 import { Message } from "@arco-design/web-vue";
@@ -48,10 +49,10 @@ const handleSubmit = async () => {
   await userStore.getUserInfo(userInfo.id);
   Message.success("个人信息修改成功");
   router.push(`/user/${userInfo.nickname}/?id=${userInfo.id}&username=${userInfo.username}`);
+  deleteFormData();
   setTimeout(() => {
     router.go(0);
   }, 0);
-  deleteFormData();
 };
 
 const onChangeBirthday = value => {
