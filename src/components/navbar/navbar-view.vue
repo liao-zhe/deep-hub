@@ -28,6 +28,9 @@ const handleOk = () => {
   router.replace("/home");
   verifyLogin.value = false;
 };
+
+const defaultKey = ref(["1"]);
+
 // 进入登录界面
 const signinClick = () => {
   router.push("/signin");
@@ -39,17 +42,29 @@ const signupClick = () => {
 // 进入home主页
 const toHome = () => {
   router.push("/home");
+  defaultKey.value = ["1"];
 };
 
 // 进入动态界面
 const toMoment = () => {
   router.push("/moment");
-  // momentStore.getMomentList({ pagenum: 1, pagesize: 15 });
+  defaultKey.value = ["2"];
 };
 
 const toQuestionAnswer = () => {
   router.push("/questionAnswer");
-  // questionStore.getQuestionList({ pagenum: 1, pagesize: 15 });
+  defaultKey.value = ["3"];
+};
+
+const searchArticle = value => {
+  if (value) {
+    router.push(`/home?search=${value}`);
+  } else {
+    router.push("/home");
+  }
+  setTimeout(() => {
+    location.reload();
+  }, 0);
 };
 </script>
 
@@ -71,16 +86,17 @@ const toQuestionAnswer = () => {
         />
       </a-col>
       <a-col :flex="8" class="center">
-        <a-menu mode="horizontal" :default-selected-keys="['1']">
+        <a-menu mode="horizontal" :default-selected-keys="defaultKey">
           <a-menu-item key="1" @click="toHome">首页</a-menu-item>
           <a-menu-item key="2" @click="toMoment">动态</a-menu-item>
           <a-menu-item key="3" @click="toQuestionAnswer">问答</a-menu-item>
         </a-menu>
-        <a-input placeholder="请输入搜索内容" allow-clear :style="{ width: '300px', marginRight: '110px' }">
-          <template #prefix>
-            <icon-search />
-          </template>
-        </a-input>
+        <a-input-search
+          :style="{ width: '320px', marginRight: '110px' }"
+          placeholder="请输入搜索内容"
+          search-button
+          @search="searchArticle"
+        />
       </a-col>
       <a-col :flex="2" class="right">
         <icon-notification class="notify" />

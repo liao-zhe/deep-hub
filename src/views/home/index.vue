@@ -6,7 +6,9 @@ import sidebarView from "../../components/slidebar/sidebar-view.vue";
 import articleList from "./components/article-list.vue";
 import userlistView from "../../components/userlist/userlist-view.vue";
 import { useHomeStore, useArticleStore } from "@/stores";
+import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
+const route = useRoute();
 const homeStore = useHomeStore();
 const articleStore = useArticleStore();
 homeStore.getUserList(1, 10);
@@ -15,7 +17,11 @@ console.log(articles.value);
 // 控制loading的显示和隐藏
 const isShowLoading = ref(true);
 const loadArticleHandler = async payload => {
-  const res = await articleStore.getArticleList({ pagenum: articleStore.pagenum++, pagesize: payload.pagesize });
+  articleStore.pagenum = 1;
+  let params = route.query.search
+    ? { pagenum: articleStore.pagenum++, pagesize: payload.pagesize, title: route.query.search }
+    : { pagenum: articleStore.pagenum++, pagesize: payload.pagesize };
+  const res = await articleStore.getArticleList(params);
   // 当res为false表示所有数据都查询出来了，此时要关闭观察器，并隐藏loading
   console.log(res);
   if (res === false) {
