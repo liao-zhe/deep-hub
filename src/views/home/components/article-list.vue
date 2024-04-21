@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, defineEmits } from "vue";
+import dayjs from "dayjs";
 
 defineProps({
   articles: {
@@ -52,6 +53,8 @@ onMounted(() => {
             </router-link>
             <span style="padding: 0 5px; color: #e1e1e1">|</span>
             <span><icon-eye /> {{ item.viewCount }} </span>
+            <span style="padding: 0 5px; color: #e1e1e1">|</span>
+            <span>{{ dayjs(item.createTime).format("YYYY-MM-DD HH:mm") }}</span>
           </div>
         </div>
         <div style="text-align: right">
@@ -59,6 +62,7 @@ onMounted(() => {
             <img style="height: 100px" :src="item.cover" alt="" />
           </div>
           <div v-else style="height: 100px"></div>
+          发布时间：
           <a-tag style="margin-left: 5px" v-for="(label, index) in item.labels" :key="index">{{ label }}</a-tag>
         </div>
       </div>
