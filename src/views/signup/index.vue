@@ -5,10 +5,10 @@ import { useRouter } from "vue-router";
 import { Message } from "@arco-design/web-vue";
 
 // 子组件
-import verifyNickname from "./cmp/verify-nickname.vue";
-import verifyEmail from "./cmp/verify-email.vue";
-import verifyUsername from "./cmp/verify-username.vue";
-import verifyPassword from "./cmp/verify-password.vue";
+import verifyNickname from "./components/verify-nickname.vue";
+import verifyEmail from "./components/verify-email.vue";
+import verifyUsername from "./components/verify-username.vue";
+import verifyPassword from "./components/verify-password.vue";
 // 网络请求
 import { fetchSignupUser } from "@/service";
 
@@ -107,7 +107,7 @@ const toSignin = () => {
   </div>
 </template>
 
-<style scoped lang="less">
+<style scoped lang="scss">
 .signupView {
   background: var(--color-bg-2);
   margin-top: 18vh;

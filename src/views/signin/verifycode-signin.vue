@@ -84,7 +84,7 @@ const toSignup = () => {
         </a-input>
       </a-form-item>
       <!-- 密码输入框 -->
-      <a-form-item field="verificationCode" label="验证" :rules="codeRule">
+      <a-form-item field="verificationCode" label="验证码" :rules="codeRule">
         <a-input v-model="loginForm.verificationCode" placeholder="请输入验证码" allow-clear autocomplete>
           <template #prefix>
             <icon-info-circle />
