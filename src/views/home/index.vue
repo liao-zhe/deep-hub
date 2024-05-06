@@ -5,12 +5,14 @@ import "@arco-design/web-vue/es/message/style/css.js";
 import sidebarView from "../../components/slidebar/sidebar-view.vue";
 import articleList from "./components/article-list.vue";
 import userlistView from "../../components/userlist/userlist-view.vue";
-import { useHomeStore, useArticleStore } from "@/stores";
+import { useHomeStore, useArticleStore, useAnnouncementStore } from "@/stores";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 const route = useRoute();
 const homeStore = useHomeStore();
 const articleStore = useArticleStore();
+const announcementStore = useAnnouncementStore();
+announcementStore.getAnnouncementList({ pagenum: 1, pagesize: 10 });
 homeStore.getUserList(1, 10);
 const { articles } = storeToRefs(articleStore);
 console.log(articles.value);
@@ -36,7 +38,7 @@ const loadArticleHandler = async payload => {
     <div class="home-container">
       <sidebar-view />
       <article-list :articles="articles" :is-show-loading="isShowLoading" @load-article="loadArticleHandler" />
-      <userlist-view :users="homeStore.users" />
+      <userlist-view :users="homeStore.users" :announcements="announcementStore.announcements"></userlist-view>
     </div>
   </div>
 </template>

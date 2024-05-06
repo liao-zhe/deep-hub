@@ -6,3 +6,4 @@ export * from "./modules/commentService";
 export * from "./modules/momentService";
 export * from "./modules/questionService";
 export * from "./modules/articleService";
+export * from "./modules/announcementService";

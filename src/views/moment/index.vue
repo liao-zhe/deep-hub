@@ -4,8 +4,10 @@ import momenList from "./components/momenList.vue";
 import slidebarView from "../../components/slidebar/sidebar-view.vue";
 import userlistView from "../../components/userlist/userlist-view.vue";
 import "@arco-design/web-vue/es/message/style/css.js";
-import { useMomentStore, useHomeStore } from "@/stores";
+import { useMomentStore, useHomeStore, useAnnouncementStore } from "@/stores";
 import { storeToRefs } from "pinia";
+const announcementStore = useAnnouncementStore();
+announcementStore.getAnnouncementList({ pagenum: 1, pagesize: 10 });
 const momentStore = useMomentStore();
 const homeStore = useHomeStore();
 
@@ -29,7 +31,7 @@ const loadMomentHandler = async payload => {
     <div class="moment-container">
       <slidebar-view />
       <momen-list :moments="moments" :is-show-loading="isShowLoading" @load-moment="loadMomentHandler"></momen-list>
-      <userlist-view :users="homeStore.users" />
+      <userlist-view :users="homeStore.users" :announcements="announcementStore.announcements" />
     </div>
   </div>
 </template>

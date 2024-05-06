@@ -152,6 +152,7 @@ const handleModalCancel = () => {
             >
               <p class="central">个人中心</p>
             </router-link>
+            <p @click="resetPassword" class="signup">修改密码</p>
             <p @click="signoutClick" class="signout">退出登录</p>
           </template>
         </a-popover>

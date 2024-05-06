@@ -5,8 +5,10 @@ import slidebarView from "../../components/slidebar/sidebar-view.vue";
 import userlistView from "../../components/userlist/userlist-view.vue";
 import "@arco-design/web-vue/es/message/style/css.js";
 
-import { useQuestionStore, useHomeStore } from "@/stores";
+import { useQuestionStore, useHomeStore, useAnnouncementStore } from "@/stores";
 import { storeToRefs } from "pinia";
+const announcementStore = useAnnouncementStore();
+announcementStore.getAnnouncementList({ pagenum: 1, pagesize: 10 });
 const questionStore = useQuestionStore();
 const homeStore = useHomeStore();
 
@@ -30,7 +32,7 @@ const loadQuestionHandler = async payload => {
     <div class="home-container">
       <slidebar-view />
       <question-list @load-question="loadQuestionHandler" :is-show-loading="isShowLoading" :questions="questions"></question-list>
-      <userlist-view :users="homeStore.users" />
+      <userlist-view :users="homeStore.users" :announcements="announcementStore.announcements" />
     </div>
   </div>
 </template>

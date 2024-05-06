@@ -3,6 +3,10 @@ defineProps({
   users: {
     type: Array,
     default: () => []
+  },
+  announcements: {
+    type: Array,
+    default: () => []
   }
 });
 </script>
@@ -29,15 +33,27 @@ defineProps({
         </template>
       </a-card-meta>
     </a-card>
+    <!-- 公告 -->
+    <div class="announcementlist">
+      <a-card hoverable :style="{ width: '200px' }">
+        <a-card-meta title="公告" class="announcement-list-item">
+          <template #description> {{ announcements.content }} </template>
+        </a-card-meta>
+      </a-card>
+    </div>
   </div>
 </template>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .card {
   width: 240px;
   background-color: var(--theme-bg1);
 }
-.user-list-item {
+.announcementlist {
+  margin-top: 20px;
+}
+.user-list-item,
+.announcement-list-item {
   cursor: pointer;
   &:hover a {
     color: rgb(var(--primary-6));
