@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useUserStore, useMomentStore, useQuestionStore } from "@/stores";
 import { storeToRefs } from "pinia";
+import { fetchUpdateUser } from "@/service";
 import { Message } from "@arco-design/web-vue";
 const userStore = useUserStore();
 const momentStore = useMomentStore();
@@ -90,13 +91,88 @@ const handleModalOk = async () => {
       console.log(error);
     });
 };
+const form = reactive({
+  password: "",
+  password2: ""
+});
+
 const handleModalCancel = () => {
   content.value = "";
   modalVisible.value = false;
 };
+const rules = {
+  password: [
+    {
+      required: true,
+      message: "密码不能为空"
+    }
+  ],
+  password2: [
+    {
+      required: true,
+      message: "密码不能为空"
+    },
+    {
+      validator: (value, cb) => {
+        if (value !== form.password) {
+          cb("两次密码不同");
+        } else {
+          cb();
+        }
+      }
+    }
+  ]
+};
+const formRef = ref();
+const formData = new FormData();
+const passwordModalVisible = ref(false);
+const passwordHandleOk = async () => {
+  const res = await formRef.value.validate();
+  if (!res) {
+    formData.append("password", form.password);
+    const res = await fetchUpdateUser(userStore.userInfo.id, formData);
+    console.log(res);
+    if (res.code != 200) {
+      Message.error("修改密码失败");
+      passwordModalVisible.value = false;
+      console.log(res.code);
+      return;
+    }
+    Message.success("修改密码成功");
+    // 清空数据
+    formData.delete("password");
+    form.password = "";
+    form.password2 = "";
+    userStore.setUserInfo({});
+    userStore.setToken("");
+  }
+};
+
+const passwordHandleCancel = async () => {
+  form.password = "";
+  form.password2 = "";
+  formRef.value.clearValidate();
+  passwordModalVisible.value = false;
+};
 </script>
 
 <template>
+  <!-- 修改密码模态框 -->
+  <a-modal v-model:visible="passwordModalVisible" :footer="null">
+    <template #title> 修改密码 </template>
+    <a-form ref="formRef" :rules="rules" :model="form">
+      <a-form-item field="password" label="密码" validate-trigger="blur">
+        <a-input-password v-model="form.password" placeholder="请输入密码" />
+      </a-form-item>
+      <a-form-item field="password2" label="确认密码" validate-trigger="blur">
+        <a-input-password v-model="form.password2" placeholder="请确认密码" />
+      </a-form-item>
+    </a-form>
+    <a-space class="button-footer">
+      <a-button @click="passwordHandleCancel">取消</a-button>
+      <a-button type="primary" @click="passwordHandleOk">确认</a-button>
+    </a-space>
+  </a-modal>
   <div class="navbar">
     <a-modal v-model:visible="visible" @ok="handleOk" :simple="true">
       <div><icon-exclamation-circle-fill style="color: rgb(var(--warning-6))" /> 你确定要退出登录吗？</div>
@@ -152,7 +228,7 @@ const handleModalCancel = () => {
             >
               <p class="central">个人中心</p>
             </router-link>
-            <p @click="resetPassword" class="signup">修改密码</p>
+            <p v-if="$route.meta.isResetPassword" class="resetPassword" @click="passwordModalVisible = true">修改密码</p>
             <p @click="signoutClick" class="signout">退出登录</p>
           </template>
         </a-popover>
@@ -172,6 +248,7 @@ const handleModalCancel = () => {
 .central,
 .signout,
 .signin,
+.resetPassword,
 .signup {
   color: var(--color-text-1);
   cursor: pointer;
@@ -207,5 +284,9 @@ const handleModalCancel = () => {
 .arco-textarea-wrapper {
   background-color: white;
   border: none;
+}
+.button-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
