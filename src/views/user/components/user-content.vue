@@ -3,8 +3,8 @@ import { useRouter, useRoute } from "vue-router";
 import { ref, defineEmits } from "vue";
 import { useUserStore, useArticleStore } from "@/stores";
 import { Message } from "@arco-design/web-vue";
-
 import { QuillEditor } from "@vueup/vue-quill";
+
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 const emits = defineEmits(["createMoment", "removeMoment", "removeArticle", "loadMoment", "loadArticle"]);
 const router = useRouter();
@@ -157,17 +157,71 @@ const beforeUpload = file => {
   return false;
 };
 
-const labelsList = ref([]);
 const formModel = ref({
   title: "",
-  content: "",
+  content: "<p><br></p>",
   cover: "", //file对象
-  labels: labelsList.value
+  labels: []
 });
 
 const formRef = ref();
 const drawervisible = ref(false);
+const articleRules = {
+  title: [
+    {
+      required: true,
+      message: "请填写文章标题"
+    }
+  ],
+  cover: [
+    {
+      validator: (value, callback) => {
+        if (!formModel.value.cover.url) {
+          callback("请选择封面图片");
+        }
+        return true;
+      },
+      trigger: "change"
+    }
+  ],
+  tags: [
+    {
+      validator: (value, callback) => {
+        if (formModel.value.labels.length == 0) {
+          callback("请选择标签");
+        }
+        return true;
+      },
+      trigger: "manual"
+    }
+  ],
+  content: [
+    {
+      validator: (value, callback) => {
+        // 富文本编辑框的值
+        const quillContent = formModel.value.content;
+        console.log(quillContent);
+        // 在这里进行自定义校验 文本删除后默认是<p><br></p>
+        if (!quillContent || quillContent.trim() === "<p><br></p>") {
+          callback("请输入文章内容");
+        }
+        return true;
+      },
+      trigger: "manual"
+    }
+  ]
+};
 
+// 手动校验
+const validateQuillContent = () => {
+  formRef.value.validateField("content");
+};
+const validateArticleCover = () => {
+  formRef.value.validateField("cover");
+};
+const validateArticleTags = () => {
+  formRef.value.validateField("tags");
+};
 const handlerClose = () => {
   formRef.value.clearValidate();
   drawer.value = false;
@@ -175,29 +229,41 @@ const handlerClose = () => {
 
 // 文章回调
 const handleArticleOk = async () => {
-  console.log(formModel.value);
-  const formData = new FormData();
-  for (const key in formModel.value) {
-    formData.append(key, formModel.value[key]);
+  const res = await formRef.value.validate();
+  console.log(res);
+  if (!res) {
+    const formData = new FormData();
+    for (const key in formModel.value) {
+      if (formModel.value.hasOwnProperty(key) && key !== "labels") {
+        if (key === "cover") {
+          formData.append(key, formModel.value[key].file);
+        } else {
+          formData.append(key, formModel.value[key]);
+        }
+      }
+    }
+    formModel.value.labels.forEach(item => {
+      formData.append("labels", item);
+    });
+    const res = await articleStore.createArticle(formData);
+    if (res) {
+      Message.success("发布成功！");
+      formModel.value = {
+        title: "",
+        content: "",
+        cover: "",
+        labels: ""
+      };
+    } else {
+      Message.error("发布失败！");
+    }
+    drawervisible.value = false;
+    articleStore.getArticleList({
+      pagenum: 1,
+      pagesize: 40,
+      username: userStore.userInfo.username
+    });
   }
-  const res = await articleStore.createArticle(formData);
-  if (res) {
-    Message.success("发布成功！");
-    formModel.value = {
-      title: "",
-      content: "",
-      cover: "",
-      labels: ""
-    };
-  } else {
-    Message.error("发布失败！");
-  }
-  drawervisible.value = false;
-  articleStore.getArticleList({
-    pagenum: 1,
-    pagesize: 40,
-    username: userStore.userInfo.username
-  });
 };
 const handleArticleCancel = () => {
   drawervisible.value = false;
@@ -215,6 +281,7 @@ const onChange = (_, currentFile) => {
     url: URL.createObjectURL(currentFile.file)
   };
 };
+// 封面图
 const onProgress = currentFile => {
   formModel.value.cover = currentFile.file;
 };
@@ -310,8 +377,14 @@ const onProgress = currentFile => {
             unmount-on-close
           >
             <template #title> 发布文章 </template>
-            <a-form v-if="$route.query.username === username && token" :model="formModel" @submit="handleSubmit" ref="formRef">
-              <a-form-item field="size" label="文章标题">
+            <a-form
+              :rules="articleRules"
+              v-if="$route.query.username === username && token"
+              :model="formModel"
+              @submit="handleSubmit"
+              ref="formRef"
+            >
+              <a-form-item field="title" label="文章标题" validate-trigger="blur">
                 <a-input
                   :style="{ width: '100%', marginBottom: '10px' }"
                   placeholder="请输入文章标题"
@@ -319,7 +392,8 @@ const onProgress = currentFile => {
                   v-model="formModel.title"
                 />
               </a-form-item>
-              <a-form-item field="size" label="文章封面">
+              <a-form-item field="cover" label="文章封面" style="position: reactive">
+                <p style="position: absolute; color: red; margin-left: -82px; font-size: 15.5px; margin-bottom: 79px">*</p>
                 <!-- 文章封面 -->
                 <a-upload
                   :auto-upload="false"
@@ -327,6 +401,7 @@ const onProgress = currentFile => {
                   :show-file-list="false"
                   @change="onChange"
                   @progress="onProgress"
+                  @click="validateArticleCover"
                 >
                   <template #upload-button>
                     <div
@@ -360,10 +435,18 @@ const onProgress = currentFile => {
                   </template>
                 </a-upload>
               </a-form-item>
-              <a-form-item field="size" label="文章标签">
-                <a-input-tag v-model="formModel.labels" :style="{ width: '100%' }" placeholder="请输入标签" allow-clear />
+
+              <a-form-item field="tags" label="文章标签" style="position: reactive">
+                <p style="position: absolute; color: red; margin-left: -82px; font-size: 15.5px; margin-bottom: 11px">*</p>
+                <a-input-tag
+                  v-model="formModel.labels"
+                  :style="{ width: '100%' }"
+                  placeholder="请输入标签"
+                  allow-clear
+                  @blur="validateArticleTags"
+                />
               </a-form-item>
-              <a-form-item field="size" label="文章内容">
+              <a-form-item field="content" label="文章内容" required>
                 <div class="editor">
                   <quill-editor
                     placeholder="请输入文章内容"
