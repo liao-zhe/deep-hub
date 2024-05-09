@@ -350,7 +350,7 @@ const onProgress = currentFile => {
           </template>
         </a-comment>
         <!-- 删除动态对话框 -->
-        <a-modal v-model:visible="deleteVisible" @ok="deleteArticleHandleOk" :simple="true">
+        <a-modal v-model:visible="deleteVisible" @ok="deleteHandleOk" :simple="true">
           <div>
             <icon-exclamation-circle-fill style="color: rgb(var(--warning-6))" />
             你确定要删除此动态吗？删除后不可恢复！
@@ -490,7 +490,7 @@ const onProgress = currentFile => {
           </template>
         </a-comment>
         <!-- 删除对话框 -->
-        <a-modal v-model:visible="deleteArticleVisible" @ok="deleteHandleOk" :simple="true">
+        <a-modal v-model:visible="deleteArticleVisible" @ok="deleteArticleHandleOk" :simple="true">
           <div>
             <icon-exclamation-circle-fill style="color: rgb(var(--warning-6))" />
             你确定要删除此文章吗？删除后不可恢复！
