@@ -59,9 +59,6 @@ const token = userStore.token;
 //   observeScrollLoading(loadArticleFn);
 // });
 // 进入动态详情
-const articleDetail = () => {
-  // router.push(`/articleDetail/${id}`);
-};
 
 const momentContent = ref("");
 const visible = ref(false);
@@ -115,15 +112,23 @@ const removeMoment = id => {
   deleteVisible.value = true;
   curId.value = id;
 };
+
 const removeArticle = id => {
   deleteArticleVisible.value = true;
   curId.value = id;
+};
+const momentDetail = id => {
+  router.push(`/detail/${id}`);
+};
+const articleDetail = id => {
+  router.push(`/articleDetail/${id}`);
 };
 // 删除动态
 const deleteHandleOk = () => {
   emits("removeMoment", curId.value);
   deleteVisible.value = false;
 };
+
 // 删除文章
 const deleteArticleHandleOk = () => {
   emits("removeArticle", curId.value);
@@ -272,7 +277,7 @@ const onProgress = currentFile => {
             </span>
           </template>
           <template #content>
-            <div @click="articleDetail(item.id)" class="moment-content">
+            <div @click="momentDetail(item.id)" class="moment-content">
               {{ item.content }}
             </div>
           </template>
