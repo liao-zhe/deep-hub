@@ -39,7 +39,11 @@ onMounted(() => {
         <div style="width: 80%; cursor: pointer">
           <router-link :to="`/articleDetail/${item.id}`">
             <div style="font-size: 20px; font-weight: 800">{{ item.title }}</div>
-            <div v-html="item.content" class="content" style="box-sizing: border-box; width: 100%; font-size: 16px"></div>
+            <div
+              v-html="item.content"
+              class="content"
+              style="box-sizing: border-box; width: 100%; font-size: 16px; height: 150px"
+            ></div>
           </router-link>
           <div style="font-size: 12px; color: #8a919f">
             <router-link
@@ -87,7 +91,6 @@ onMounted(() => {
   .content-item {
     margin: 10px 0;
     .content {
-      width: fit-content;
       margin: 10px 0;
       overflow: hidden;
       color: #8a919f;
