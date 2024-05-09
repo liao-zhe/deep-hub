@@ -3,7 +3,7 @@ import { ref, reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useUserStore, useMomentStore, useQuestionStore } from "@/stores";
 import { storeToRefs } from "pinia";
-import { fetchUpdateUser } from "@/service";
+import { fetchUpdatePassword } from "@/service";
 import { Message } from "@arco-design/web-vue";
 const userStore = useUserStore();
 const momentStore = useMomentStore();
@@ -93,7 +93,8 @@ const handleModalOk = async () => {
 };
 const form = reactive({
   password: "",
-  password2: ""
+  newPassword: "",
+  newPassword2: ""
 });
 
 const handleModalCancel = () => {
@@ -101,20 +102,27 @@ const handleModalCancel = () => {
   modalVisible.value = false;
 };
 const rules = {
+  // 原密码
   password: [
+    {
+      required: true,
+      message: "原密码不能为空"
+    }
+  ],
+  newPassword: [
     {
       required: true,
       message: "密码不能为空"
     }
   ],
-  password2: [
+  newPassword2: [
     {
       required: true,
       message: "密码不能为空"
     },
     {
       validator: (value, cb) => {
-        if (value !== form.password) {
+        if (value !== form.newPassword) {
           cb("两次密码不同");
         } else {
           cb();
@@ -124,33 +132,33 @@ const rules = {
   ]
 };
 const formRef = ref();
-const formData = new FormData();
 const passwordModalVisible = ref(false);
 const passwordHandleOk = async () => {
   const res = await formRef.value.validate();
   if (!res) {
-    formData.append("password", form.password);
-    const res = await fetchUpdateUser(userStore.userInfo.id, formData);
-    console.log(res);
+    const res = await fetchUpdatePassword({ password: form.password, newPassword: form.newPassword });
     if (res.code != 200) {
+      console.log(111);
       Message.error("修改密码失败");
       passwordModalVisible.value = false;
-      console.log(res.code);
       return;
     }
     Message.success("修改密码成功");
     // 清空数据
-    formData.delete("password");
     form.password = "";
-    form.password2 = "";
+    form.newPassword = "";
+    form.newPassword2 = "";
     userStore.setUserInfo({});
     userStore.setToken("");
+    router.push("/signin");
+    passwordModalVisible.value = false;
   }
 };
 
 const passwordHandleCancel = async () => {
   form.password = "";
-  form.password2 = "";
+  form.newPassword = "";
+  form.newPassword2 = "";
   formRef.value.clearValidate();
   passwordModalVisible.value = false;
 };
@@ -161,11 +169,14 @@ const passwordHandleCancel = async () => {
   <a-modal v-model:visible="passwordModalVisible" :footer="null">
     <template #title> 修改密码 </template>
     <a-form ref="formRef" :rules="rules" :model="form">
-      <a-form-item field="password" label="密码" validate-trigger="blur">
-        <a-input-password v-model="form.password" placeholder="请输入密码" />
+      <a-form-item field="password" label="原 密码" validate-trigger="blur">
+        <a-input-password v-model="form.password" placeholder="请输入原密码" />
       </a-form-item>
-      <a-form-item field="password2" label="确认密码" validate-trigger="blur">
-        <a-input-password v-model="form.password2" placeholder="请确认密码" />
+      <a-form-item field="newPassword" label="密  码" validate-trigger="blur">
+        <a-input-password v-model="form.newPassword" placeholder="请输入密码" />
+      </a-form-item>
+      <a-form-item field="newPassword2" label="确认密码" validate-trigger="blur">
+        <a-input-password v-model="form.newPassword2" placeholder="请确认密码" />
       </a-form-item>
     </a-form>
     <a-space class="button-footer">

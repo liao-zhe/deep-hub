@@ -42,3 +42,12 @@ export function fetchUpdateUser(id: string, formData: any) {
     data: formData
   });
 }
+
+// 修改密码
+export function fetchUpdatePassword(data: { newPassword: string; password: string }) {
+  return cmsService.request({
+    url: `/user/update-password`,
+    method: "post",
+    data
+  });
+}
