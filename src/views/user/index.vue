@@ -23,7 +23,7 @@ const { articles } = storeToRefs(articleStore);
 const isShowLoading = ref(true);
 userStore.getUserInfo(route.query.id);
 const { token, userInfo, otherUserInfo } = storeToRefs(userStore);
-console.log();
+console.log(userInfo);
 // 获取动态列表
 // const loadMomentHandler = async payload => {
 //   const res = await momentStore.getMomentList({
@@ -54,12 +54,12 @@ console.log();
 momentStore.getMomentList({
   pagenum: 1,
   pagesize: 40,
-  username: userStore.userInfo.username
+  username: route.query.username
 });
 articleStore.getArticleList({
   pagenum: 1,
   pagesize: 40,
-  username: userStore.userInfo.username
+  username: route.query.username
 });
 // 创建动态
 const createMomentHandler = async payload => {
@@ -77,6 +77,17 @@ const removeMomentHandler = async id => {
     await momentStore.getMomentList({ pagenum: 1, pagesize: 10, username: route.query.username });
   } else {
     Message.error("动态删除失败");
+  }
+};
+
+// 删除文章
+const removeArticleHandler = async id => {
+  const res = await articleStore.removeArticle(id);
+  if (!res) {
+    Message.success("文章删除成功");
+    await articleStore.getArticleList({ pagenum: 1, pagesize: 10, username: route.query.username });
+  } else {
+    Message.error("文章删除失败");
   }
 };
 // Particles.resumeAnimation()
@@ -102,6 +113,7 @@ const removeMomentHandler = async id => {
         :articles="articles"
         @create-moment="createMomentHandler"
         @remove-moment="removeMomentHandler"
+        @remove-article="removeArticleHandler"
         @load-moment="loadMomentHandler"
         @load-article="loadArticleHandler"
         :is-show-loading="isShowLoading"

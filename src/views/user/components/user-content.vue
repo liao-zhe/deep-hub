@@ -6,7 +6,7 @@ import { Message } from "@arco-design/web-vue";
 
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-const emits = defineEmits(["createMoment", "removeMoment", "loadMoment", "loadArticle"]);
+const emits = defineEmits(["createMoment", "removeMoment", "removeArticle", "loadMoment", "loadArticle"]);
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
@@ -109,13 +109,14 @@ const handleCancel = () => {
 };
 
 const deleteVisible = ref(false);
+const deleteArticleVisible = ref(false);
 const curId = ref("");
 const removeMoment = id => {
   deleteVisible.value = true;
   curId.value = id;
 };
 const removeArticle = id => {
-  deleteVisible.value = true;
+  deleteArticleVisible.value = true;
   curId.value = id;
 };
 // 删除动态
@@ -123,8 +124,12 @@ const deleteHandleOk = () => {
   emits("removeMoment", curId.value);
   deleteVisible.value = false;
 };
-
-// 文件上传前回调
+// 删除文章
+const deleteArticleHandleOk = () => {
+  emits("removeArticle", curId.value);
+  deleteVisible.value = false;
+};
+// 图片上传前回调
 let uid = -1;
 const beforeUpload = file => {
   if (canceled) {
@@ -162,6 +167,7 @@ const handlerClose = () => {
   formRef.value.clearValidate();
   drawer.value = false;
 };
+
 // 文章回调
 const handleArticleOk = async () => {
   console.log(formModel.value);
@@ -271,8 +277,8 @@ const onProgress = currentFile => {
             </div>
           </template>
         </a-comment>
-        <!-- 删除对话框 -->
-        <a-modal v-model:visible="deleteVisible" @ok="deleteHandleOk" :simple="true">
+        <!-- 删除动态对话框 -->
+        <a-modal v-model:visible="deleteVisible" @ok="deleteArticleHandleOk" :simple="true">
           <div>
             <icon-exclamation-circle-fill style="color: rgb(var(--warning-6))" />
             你确定要删除此动态吗？删除后不可恢复！
@@ -287,88 +293,91 @@ const onProgress = currentFile => {
         </h3> -->
       </a-tab-pane>
       <a-tab-pane key="2" title="文章">
-        <a-drawer
-          :before-close="handlerClose"
-          class="add-article-sction"
-          width="50%"
-          size="50"
-          :visible="drawervisible"
-          @ok="handleArticleOk"
-          @cancel="handleArticleCancel"
-          unmount-on-close
-        >
-          <template #title> 发布文章 </template>
-          <a-form v-if="$route.query.username === username && token" :model="formModel" @submit="handleSubmit" ref="formRef">
-            <a-form-item field="size" label="文章标题">
-              <a-input
-                :style="{ width: '100%', marginBottom: '10px' }"
-                placeholder="请输入文章标题"
-                allow-clear
-                v-model="formModel.title"
-              />
-            </a-form-item>
-            <a-form-item field="size" label="文章封面">
-              <!-- 文章封面 -->
-              <a-upload
-                :auto-upload="false"
-                :file-list="formModel.cover ? [formModel.cover] : []"
-                :show-file-list="false"
-                @change="onChange"
-                @progress="onProgress"
-              >
-                <template #upload-button>
-                  <div
-                    :class="`arco-upload-list-item${formModel.cover && formModel.cover.status === 'error' ? ' arco-upload-list-item-error' : ''}`"
-                  >
-                    <div class="arco-upload-list-picture custom-upload-avatar" v-if="formModel.cover && formModel.cover.url">
-                      <img :src="formModel.cover.url" />
-                      <div class="arco-upload-list-picture-mask">
-                        <IconEdit />
-                      </div>
-                      <a-progress
-                        v-if="formModel.cover.status === 'uploading' && formModel.cover.percent < 100"
-                        :percent="formModel.cover.percent"
-                        type="circle"
-                        size="mini"
-                        :style="{
-                          position: 'absolute',
-                          left: '50%',
-                          top: '50%',
-                          transform: 'translateX(-50%) translateY(-50%)'
-                        }"
-                      />
-                    </div>
-                    <div class="arco-upload-picture-card" v-else>
-                      <div class="arco-upload-picture-card-text">
-                        <IconPlus />
-                        <div style="margin-top: 10px; font-weight: 600"></div>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-              </a-upload>
-            </a-form-item>
-            <a-form-item field="size" label="文章标签">
-              <a-input-tag v-model="formModel.labels" :style="{ width: '100%' }" placeholder="请输入标签" allow-clear />
-            </a-form-item>
-            <a-form-item field="size" label="文章内容">
-              <div class="editor">
-                <quill-editor
-                  placeholder="请输入文章内容"
-                  theme="snow"
-                  v-model:content="formModel.content"
-                  content-type="html"
-                  @blur="validateQuillContent"
+        <div v-if="$route.query.username === username && token">
+          <a-drawer
+            :before-close="handlerClose"
+            class="add-article-sction"
+            width="50%"
+            size="50"
+            :visible="drawervisible"
+            @ok="handleArticleOk"
+            @cancel="handleArticleCancel"
+            unmount-on-close
+          >
+            <template #title> 发布文章 </template>
+            <a-form v-if="$route.query.username === username && token" :model="formModel" @submit="handleSubmit" ref="formRef">
+              <a-form-item field="size" label="文章标题">
+                <a-input
+                  :style="{ width: '100%', marginBottom: '10px' }"
+                  placeholder="请输入文章标题"
+                  allow-clear
+                  v-model="formModel.title"
+                />
+              </a-form-item>
+              <a-form-item field="size" label="文章封面">
+                <!-- 文章封面 -->
+                <a-upload
+                  :auto-upload="false"
+                  :file-list="formModel.cover ? [formModel.cover] : []"
+                  :show-file-list="false"
+                  @change="onChange"
+                  @progress="onProgress"
                 >
-                </quill-editor>
-              </div>
-            </a-form-item>
-          </a-form>
-        </a-drawer>
-        <!-- 发布文章对话框 -->
-        <!-- <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel" ok-text="发布"> </a-modal> -->
-        <div style="text-align: right">
-          <a-button type="primary" @click="handleClick('文章')">发布文章+</a-button>
+                  <template #upload-button>
+                    <div
+                      :class="`arco-upload-list-item${formModel.cover && formModel.cover.status === 'error' ? ' arco-upload-list-item-error' : ''}`"
+                    >
+                      <div class="arco-upload-list-picture custom-upload-avatar" v-if="formModel.cover && formModel.cover.url">
+                        <img :src="formModel.cover.url" />
+                        <div class="arco-upload-list-picture-mask">
+                          <IconEdit />
+                        </div>
+                        <a-progress
+                          v-if="formModel.cover.status === 'uploading' && formModel.cover.percent < 100"
+                          :percent="formModel.cover.percent"
+                          type="circle"
+                          size="mini"
+                          :style="{
+                            position: 'absolute',
+                            left: '50%',
+                            top: '50%',
+                            transform: 'translateX(-50%) translateY(-50%)'
+                          }"
+                        />
+                      </div>
+                      <div class="arco-upload-picture-card" v-else>
+                        <div class="arco-upload-picture-card-text">
+                          <IconPlus />
+                          <div style="margin-top: 10px; font-weight: 600"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </a-upload>
+              </a-form-item>
+              <a-form-item field="size" label="文章标签">
+                <a-input-tag v-model="formModel.labels" :style="{ width: '100%' }" placeholder="请输入标签" allow-clear />
+              </a-form-item>
+              <a-form-item field="size" label="文章内容">
+                <div class="editor">
+                  <quill-editor
+                    placeholder="请输入文章内容"
+                    theme="snow"
+                    v-model:content="formModel.content"
+                    content-type="html"
+                    @blur="validateQuillContent"
+                  >
+                  </quill-editor>
+                </div>
+              </a-form-item>
+            </a-form>
+          </a-drawer>
+
+          <!-- 发布文章对话框 -->
+          <!-- <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel" ok-text="发布"> </a-modal> -->
+          <div style="text-align: right">
+            <a-button type="primary" @click="handleClick('文章')">发布文章+</a-button>
+          </div>
         </div>
         <a-comment
           v-for="item in articles"
@@ -389,14 +398,14 @@ const onProgress = currentFile => {
             </span>
           </template>
           <template #content>
-            <div @click="momentDetail(item.id)" class="moment-content" v-html="item.content"></div>
+            <div @click="articleDetail(item.id)" class="moment-content" v-html="item.content"></div>
           </template>
         </a-comment>
         <!-- 删除对话框 -->
-        <a-modal v-model:visible="deleteVisible" @ok="deleteHandleOk" :simple="true">
+        <a-modal v-model:visible="deleteArticleVisible" @ok="deleteHandleOk" :simple="true">
           <div>
             <icon-exclamation-circle-fill style="color: rgb(var(--warning-6))" />
-            你确定要删除此动态吗？删除后不可恢复！
+            你确定要删除此文章吗？删除后不可恢复！
           </div>
         </a-modal>
         <!-- <div class="loading" v-if="true">
