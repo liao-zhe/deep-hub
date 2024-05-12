@@ -22,7 +22,8 @@ const { moments } = storeToRefs(momentStore);
 const { articles } = storeToRefs(articleStore);
 const isShowLoading = ref(true);
 userStore.getUserInfo(route.query.id);
-const { token, userInfo, otherUserInfo } = storeToRefs(userStore);
+userStore.getFollowList(route.query.id, { pagenum: 1, pagesize: 15 });
+const { token, userInfo, otherUserInfo, followList } = storeToRefs(userStore);
 console.log(userInfo);
 // 获取动态列表
 // const loadMomentHandler = async payload => {
@@ -111,6 +112,7 @@ const removeArticleHandler = async id => {
         v-if="moments || articles"
         :moments="moments"
         :articles="articles"
+        :follow-list="followList"
         @create-moment="createMomentHandler"
         @remove-moment="removeMomentHandler"
         @remove-article="removeArticleHandler"

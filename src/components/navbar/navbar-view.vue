@@ -204,7 +204,7 @@ const passwordHandleCancel = async () => {
         <a-menu mode="horizontal" :default-selected-keys="defaultKey">
           <a-menu-item key="1" @click="toHome">首页</a-menu-item>
           <a-menu-item key="2" @click="toMoment">动态</a-menu-item>
-          <a-menu-item key="3" @click="toQuestionAnswer">问答</a-menu-item>
+          <a-menu-item key="3" @click="toQuestionAnswer">等你来答</a-menu-item>
         </a-menu>
         <a-input-search
           :style="{ width: '320px', marginRight: '110px' }"

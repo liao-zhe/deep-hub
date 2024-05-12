@@ -2,6 +2,8 @@
 import { ref, onMounted, defineEmits } from "vue";
 import { IconHeart, IconMessage, IconHeartFill } from "@arco-design/web-vue/es/icon";
 import { useUserStore } from "@/stores";
+import { fetchFollowUser } from "@/service";
+import { Message } from "@arco-design/web-vue";
 const userStore = useUserStore();
 const likes = ref({});
 const onLikeChange = id => {
@@ -35,6 +37,16 @@ onMounted(() => {
   );
   observer.observe(loadingRef.value);
 });
+// 关注用户
+const toFollow = async id => {
+  if (id !== userStore.userInfo.id) {
+    await fetchFollowUser(id);
+    Message.success("关注用户成功");
+    document.querySelectorAll(".follwed-button").forEach(element => {
+      element.style.display = "none";
+    });
+  }
+};
 </script>
 
 <template>
@@ -56,6 +68,13 @@ onMounted(() => {
       <template #avatar> </template>
       <template #content>
         <div class="moment-content">
+          <a-button
+            v-if="item.userId !== userStore.userInfo.id"
+            class="follwed-button"
+            shape="round"
+            @click="toFollow(item.userId)"
+            >关注
+          </a-button>
           <router-link :to="`/user/${item.user.nickname}/?id=${item.userId}&username=${item.user.username}`" target="_blank">
             <div class="author-info">
               <a-avatar :size="32">
@@ -127,6 +146,11 @@ onMounted(() => {
   background: var(--color-fill-3);
 }
 .moment-content {
+  position: relative;
+  .follwed-button {
+    position: absolute;
+    margin-left: 600px;
+  }
   .author-info {
     display: flex;
     margin-bottom: 10px;

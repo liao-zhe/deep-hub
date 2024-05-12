@@ -4,6 +4,7 @@ import { ref, defineEmits } from "vue";
 import { useUserStore, useArticleStore } from "@/stores";
 import { Message } from "@arco-design/web-vue";
 import { QuillEditor } from "@vueup/vue-quill";
+import { fetchFollowUser } from "@/service";
 
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 const emits = defineEmits(["createMoment", "removeMoment", "removeArticle", "loadMoment", "loadArticle"]);
@@ -19,6 +20,10 @@ defineProps({
     default: () => []
   },
   articles: {
+    type: Array,
+    default: () => []
+  },
+  followList: {
     type: Array,
     default: () => []
   },
@@ -285,6 +290,16 @@ const onChange = (_, currentFile) => {
 const onProgress = currentFile => {
   formModel.value.cover = currentFile.file;
 };
+
+// 取消关注
+const cancelFollow = async id => {
+  await fetchFollowUser(id);
+  userStore.getFollowList(id, {
+    pagenum: 1,
+    pagesize: 15
+  });
+  Message.success("取消关注成功");
+};
 </script>
 
 <template>
@@ -503,6 +518,21 @@ const onProgress = currentFile => {
           <icon-info-circle />
           已经加载到底部了
         </h3> -->
+      </a-tab-pane>
+      <a-tab-pane key="3" title="关注">
+        <div v-if="$route.query.username === username && token">
+          <a-comment v-for="item in followList" :author="item.nickname" :key="item.id" class="content-item" align="right">
+            <template #avatar>
+              <img :src="item.avatar" />
+            </template>
+            <template #actions>
+              <a-button shape="round" @click="cancelFollow(item.id)">已关注</a-button>
+            </template>
+            <template #content>
+              {{ item.bio }}
+            </template>
+          </a-comment>
+        </div>
       </a-tab-pane>
     </a-tabs>
   </div>

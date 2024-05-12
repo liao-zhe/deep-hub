@@ -51,3 +51,20 @@ export function fetchUpdatePassword(data: { newPassword: string; password: strin
     data
   });
 }
+
+// 关注用户
+export function fetchFollowUser(id: string) {
+  return cmsService.request({
+    url: `/user/follow-user/${id}`,
+    method: "post"
+  });
+}
+
+// 关注列表
+export function fetchFollowList(id: string, params: { pagenum: number; pagesize: number }) {
+  return cmsService.request({
+    url: `/user/following/${id}`,
+    method: "get",
+    params
+  });
+}

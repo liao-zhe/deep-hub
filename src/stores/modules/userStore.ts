@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
 import piniaPersistConfig from "@/stores/helper/persist";
-import { fetchUser, fetchUpdateUser } from "@/service";
+import { fetchUser, fetchUpdateUser, fetchFollowList } from "@/service";
 export interface UserState {
   token: string;
   verifyLogin: boolean;
   userInfo: {};
   defaultAvatar: string;
   otherUserInfo: {};
+  followList: [];
 }
 export const useUserStore = defineStore("user", {
   state: (): UserState => ({
@@ -15,7 +16,8 @@ export const useUserStore = defineStore("user", {
     userInfo: {},
     defaultAvatar:
       "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp",
-    otherUserInfo: ""
+    otherUserInfo: "",
+    followList: []
   }),
   getters: {},
   actions: {
@@ -38,6 +40,12 @@ export const useUserStore = defineStore("user", {
     async updateUser(id: string, formData: any) {
       const res = await fetchUpdateUser(id, formData);
       if (res.code !== 200) return res.success;
+    },
+    //关注列表
+    async getFollowList(id: string, params: { pagenum: number; pagesize: number }) {
+      const res = await fetchFollowList(id, params);
+      if (res.code !== 200) return res.success;
+      this.followList = res.data.list;
     }
   },
   persist: piniaPersistConfig("user")
